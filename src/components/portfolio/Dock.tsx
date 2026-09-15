@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { BookOpen, Compass, FileText, LayoutGrid, LayoutList, Mail, Settings, Sparkles, Terminal, User } from "lucide-react";
+import { BookOpen, Calculator, Compass, FileText, FlaskConical, Gamepad2, LayoutGrid, LayoutList, Mail, Paintbrush, Settings, Sparkles, Stethoscope, Terminal, User } from "lucide-react";
 import { SOCIALS } from "@/data/socials";
 import { useIsTouch } from "@/hooks/useBreakpoint";
 import { hasBooted } from "./BootIntro";
@@ -141,6 +141,18 @@ export function Dock({
     { key: "apps", label: "Apps", icon: <Compass size={isMobile ? 22 : 18} />, onClick: onToggleAppsLauncher, active: appsLauncherOpen },
   ];
 
+  const desktopApps: Entry[] = [
+    { key: "terminal", label: "Terminal", icon: <Terminal size={18} />, onClick: () => onOpenWindow("terminal"), active: activeWindowTypes.has("terminal") },
+    { key: "notes", label: "Journal", icon: <BookOpen size={18} />, onClick: () => onOpenWindow("notes"), active: activeWindowTypes.has("notes") },
+    { key: "resume", label: "Resume", icon: <FileText size={18} />, onClick: () => onOpenWindow("resume"), active: activeWindowTypes.has("resume") },
+    { key: "mail", label: "Reviews", icon: <Sparkles size={18} />, onClick: () => onOpenWindow("mail"), active: activeWindowTypes.has("mail") },
+    { key: "estimator", label: "Estimator", icon: <Calculator size={18} />, onClick: () => onOpenWindow("estimator"), active: activeWindowTypes.has("estimator") },
+    { key: "paint", label: "Paint", icon: <Paintbrush size={18} />, onClick: () => onOpenWindow("paint"), active: activeWindowTypes.has("paint") },
+    { key: "arcade", label: "Arcade", icon: <Gamepad2 size={18} />, onClick: () => onOpenWindow("arcade"), active: activeWindowTypes.has("arcade") },
+    { key: "diagnostics", label: "Diagnostics", icon: <Stethoscope size={18} />, onClick: () => onOpenWindow("diagnostics"), active: activeWindowTypes.has("diagnostics") },
+    { key: "playground", label: "Physics", icon: <FlaskConical size={18} />, onClick: () => onOpenWindow("playground"), active: activeWindowTypes.has("playground") },
+  ];
+
   const mobileExtras: (Entry | "separator")[] = veryNarrow
     ? []
     : [
@@ -157,10 +169,7 @@ export function Dock({
     : isCompact
       ? [
           ...core,
-          { key: "terminal", label: "Terminal", icon: <Terminal size={18} />, onClick: () => onOpenWindow("terminal"), active: activeWindowTypes.has("terminal") },
-          { key: "notes", label: "Journal", icon: <BookOpen size={18} />, onClick: () => onOpenWindow("notes"), active: activeWindowTypes.has("notes") },
-          { key: "resume", label: "Resume", icon: <FileText size={18} />, onClick: () => onOpenWindow("resume"), active: activeWindowTypes.has("resume") },
-          { key: "mail", label: "Reviews", icon: <Sparkles size={18} />, onClick: () => onOpenWindow("mail"), active: activeWindowTypes.has("mail") },
+          ...desktopApps,
           "separator",
           ...socialEntries,
           "separator",
@@ -169,10 +178,7 @@ export function Dock({
         ]
       : [
           ...core,
-          { key: "terminal", label: "Terminal", icon: <Terminal size={18} />, onClick: () => onOpenWindow("terminal"), active: activeWindowTypes.has("terminal") },
-          { key: "notes", label: "Journal", icon: <BookOpen size={18} />, onClick: () => onOpenWindow("notes"), active: activeWindowTypes.has("notes") },
-          { key: "resume", label: "Resume", icon: <FileText size={18} />, onClick: () => onOpenWindow("resume"), active: activeWindowTypes.has("resume") },
-          { key: "mail", label: "Reviews", icon: <Sparkles size={18} />, onClick: () => onOpenWindow("mail"), active: activeWindowTypes.has("mail") },
+          ...desktopApps,
           "separator",
           ...socialEntries,
           "separator",

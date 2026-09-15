@@ -42,6 +42,7 @@ interface Props {
 
 export function FloatingProject({
   project,
+  bp,
   order,
   cell,
   mouseX,
@@ -68,7 +69,7 @@ export function FloatingProject({
   const amp = parallax && !reduced ? DEPTH_PX[project.depth] : 0;
   const parallaxX = useTransform(mouseX, (value) => value * 2 * amp);
   const parallaxY = useTransform(mouseY, (value) => value * 2 * amp);
-  const dragEnabled = parallax && !reduced;
+  const dragEnabled = bp === "desktop";
   const dragX = useMotionValue(offset?.dx ?? 0);
   const dragY = useMotionValue(offset?.dy ?? 0);
   const targetX = offset?.dx ?? 0;
@@ -124,7 +125,8 @@ export function FloatingProject({
     const doubleClick = now - lastClickTimeRef.current < 320;
     lastClickTimeRef.current = now;
     onSelectProject?.(project.id, event.metaKey || event.ctrlKey);
-    if (!parallax || doubleClick) onOpen(project, event.currentTarget.getBoundingClientRect());
+    const requiresDoubleClick = bp === "desktop";
+    if (!requiresDoubleClick || doubleClick) onOpen(project, event.currentTarget.getBoundingClientRect());
   };
 
   return (

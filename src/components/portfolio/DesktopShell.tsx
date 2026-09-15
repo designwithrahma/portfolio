@@ -938,7 +938,7 @@ export function DesktopShell() {
             className="fixed bottom-[96px] left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-2 text-center sm:bottom-[26px] sm:left-6 sm:translate-x-0 sm:items-start sm:text-left"
           >
             <p className="pointer-events-none font-mono text-[9.5px] uppercase tracking-[0.18em] text-white/50">
-              {isMobile ? "Tap icons to open · Apps to explore" : "Double-click icons · Right-click for more"}
+              {isMobile ? "Tap to open · Apps to explore · Long-press for more" : "Double-click to open · Drag icons · Space preview · ⌘K search · Right-click for more"}
             </p>
             <button
               type="button"
