@@ -1,0 +1,70 @@
+/**
+ * Central media registry.
+ * Replace these URLs / imports with your own assets at any time.
+ */
+
+const px = (id: number, w: number, h: number) =>
+  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=${w}&h=${h}`;
+
+/* ── wallpapers — right-click the desktop to cycle ─────────── */
+
+export interface Wallpaper {
+  id: string;
+  name: string;
+  desktop: string;
+  mobile: string;
+  alt: string;
+}
+
+export const WALLPAPERS: Wallpaper[] = [
+  {
+    id: "ridgelines",
+    name: "Mist Ridgelines",
+    desktop: px(16166873, 2560, 1600),
+    mobile: px(16166873, 1200, 1800),
+    alt: "Layered mountain ridgelines dissolving into overcast mist.",
+  },
+  {
+    id: "monochrome-peak",
+    name: "Monochrome Peak",
+    desktop: px(30140430, 2560, 1600),
+    mobile: px(30140430, 1200, 1800),
+    alt: "Dramatic black and white peak fading into fog.",
+  },
+  {
+    id: "still-lake",
+    name: "Still Lake",
+    desktop: px(20344851, 2560, 1600),
+    mobile: px(20344851, 1200, 1800),
+    alt: "Fog-covered lake with trees dissolving into white.",
+  },
+  {
+    id: "snow-mist",
+    name: "Snow Mist",
+    desktop: px(36509425, 2560, 1600),
+    mobile: px(36509425, 1200, 1800),
+    alt: "Snowy slopes vanishing into heavy mountain mist.",
+  },
+];
+
+/* ── other media ───────────────────────────────────────────── */
+
+export const MEDIA = {
+  portrait: {
+    src: px(8346029, 840, 1120),
+    alt: "Studio portrait, black outfit against soft grey backdrop.",
+    credit: "Ron Lach / Pexels",
+  },
+
+  /* Editorial gallery shots cycled through project case studies */
+  shots: [
+    { src: px(8534085, 1400, 940), caption: "Fig. — Product surfaces" },
+    { src: px(8092461, 1400, 940), caption: "Fig. — Design process" },
+    { src: px(6893379, 1400, 940), caption: "Fig. — Systems & specs" },
+    { src: px(8532637, 1400, 940), caption: "Fig. — Interface studies" },
+    { src: px(8092469, 1400, 940), caption: "Fig. — Working sessions" },
+    { src: px(8167317, 1400, 940), caption: "Fig. — Device testing" },
+    { src: px(8092459, 1400, 940), caption: "Fig. — Art direction" },
+    { src: px(6893359, 1400, 940), caption: "Fig. — Material details" },
+  ],
+} as const;

@@ -1,0 +1,199 @@
+import { useState } from "react";
+import { Calculator, ArrowRight, Check, Sparkles, Clock } from "lucide-react";
+
+interface Props {
+  onOpenContactWithScope: (scopeSummary: string) => void;
+}
+
+const SERVICES = [
+  { id: "brand", label: "Brand Identity & Art Direction", base: 1800, weeks: 2 },
+  { id: "product", label: "Product UI / UX Design & Systems", base: 2600, weeks: 3 },
+  { id: "web", label: "Full-Stack Web Engineering (Next.js)", base: 3400, weeks: 4 },
+  { id: "3d", label: "WebGL / Interactive 3D Physics", base: 2200, weeks: 2 },
+];
+
+const SCOPE_TIERS = [
+  { id: "mvp", label: "MVP / Sprint (Core Deliverables)", multiplier: 1.0, weeksMul: 1.0 },
+  { id: "scale", label: "Scale (Full Design System + CMS)", multiplier: 1.6, weeksMul: 1.5 },
+  { id: "flagship", label: "Flagship (Bespoke Animations & 3D)", multiplier: 2.2, weeksMul: 2.0 },
+];
+
+export function EstimatorWindow({ onOpenContactWithScope }: Props) {
+  const [selectedServices, setSelectedServices] = useState<string[]>(["product", "web"]);
+  const [selectedTier, setSelectedTier] = useState<string>("scale");
+  const [isRush, setIsRush] = useState(false);
+
+  const toggleService = (id: string) => {
+    setSelectedServices((prev) =>
+      prev.includes(id) ? (prev.length > 1 ? prev.filter((s) => s !== id) : prev) : [...prev, id],
+    );
+  };
+
+  const tier = SCOPE_TIERS.find((t) => t.id === selectedTier) || SCOPE_TIERS[0];
+
+  const rawBase = selectedServices.reduce((sum, id) => {
+    const s = SERVICES.find((item) => item.id === id);
+    return sum + (s?.base || 0);
+  }, 0);
+
+  const rawWeeks = selectedServices.reduce((sum, id) => {
+    const s = SERVICES.find((item) => item.id === id);
+    return Math.max(sum, s?.weeks || 0);
+  }, 0);
+
+  const finalCost = Math.round(rawBase * tier.multiplier * (isRush ? 1.25 : 1.0));
+  const finalWeeks = Math.max(2, Math.round(rawWeeks * tier.weeksMul * (isRush ? 0.7 : 1.0)));
+
+  const handleSendToContact = () => {
+    const serviceNames = selectedServices
+      .map((id) => SERVICES.find((s) => s.id === id)?.label)
+      .filter(Boolean)
+      .join(", ");
+    const scopeMsg = `Hi Rahma, I used your Project Scope Estimator:\n- Services: ${serviceNames}\n- Tier: ${tier.label}\n- Estimated Budget: ~$${finalCost.toLocaleString()}\n- Target Timeline: ~${finalWeeks} weeks\n\nLet's discuss further!`;
+    onOpenContactWithScope(scopeMsg);
+  };
+
+  return (
+    <div className="h-full overflow-y-auto os-scroll bg-white text-ink p-5 sm:p-8 select-none">
+      <div className="max-w-2xl mx-auto space-y-7">
+        {/* Header */}
+        <div className="border-b border-ink/10 pb-5">
+          <div className="flex items-center gap-2 text-xs font-mono text-ink/40 uppercase tracking-widest">
+            <Calculator size={13} className="text-emerald-700" />
+            <span>Project Scope &amp; Budget Calculator</span>
+          </div>
+          <h2 className="text-2xl font-medium tracking-tight text-ink mt-1">
+            Estimate Your Project Scope
+          </h2>
+          <p className="text-xs text-ink/60 mt-1">
+            Transparent pricing based on selected disciplines, scale, and delivery timelines.
+          </p>
+        </div>
+
+        {/* 1. Services */}
+        <div className="space-y-3">
+          <label className="block text-xs font-mono uppercase tracking-wider text-ink/50 font-semibold">
+            1. Select Required Services
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {SERVICES.map((s) => {
+              const active = selectedServices.includes(s.id);
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => toggleService(s.id)}
+                  className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between ${
+                    active
+                      ? "border-emerald-600 bg-emerald-50/50 shadow-sm ring-1 ring-emerald-500/30"
+                      : "border-ink/10 bg-white hover:border-ink/20"
+                  }`}
+                >
+                  <div className="space-y-0.5">
+                    <p className="text-xs font-semibold text-ink">{s.label}</p>
+                    <p className="text-[10.5px] font-mono text-ink/50">Base: ${s.base.toLocaleString()}</p>
+                  </div>
+                  <div
+                    className={`w-5 h-5 rounded-md flex items-center justify-center border ${
+                      active ? "bg-emerald-600 border-emerald-600 text-white" : "border-ink/20"
+                    }`}
+                  >
+                    {active && <Check size={12} strokeWidth={3} />}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 2. Scale Tier */}
+        <div className="space-y-3">
+          <label className="block text-xs font-mono uppercase tracking-wider text-ink/50 font-semibold">
+            2. Project Depth &amp; Complexity
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            {SCOPE_TIERS.map((t) => {
+              const active = selectedTier === t.id;
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => setSelectedTier(t.id)}
+                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer space-y-1 ${
+                    active
+                      ? "border-ink bg-ink/5 shadow-sm font-semibold"
+                      : "border-ink/10 bg-white hover:border-ink/20"
+                  }`}
+                >
+                  <p className="text-xs font-medium text-ink">{t.label.split(" (")[0]}</p>
+                  <p className="text-[10px] text-ink/50 font-mono">
+                    {t.id === "mvp" ? "Lean & Fast" : t.id === "scale" ? "Comprehensive" : "High-End Craft"}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 3. Rush toggle */}
+        <div className="p-3.5 rounded-xl border border-ink/10 bg-ink/[0.02] flex items-center justify-between">
+          <div>
+            <p className="text-xs font-medium text-ink">Priority Rush Delivery</p>
+            <p className="text-[11px] text-ink/50">Compress timelines by 30% (+25% surge fee)</p>
+          </div>
+          <button
+            onClick={() => setIsRush((r) => !r)}
+            className={`w-11 h-6 rounded-full transition-colors p-0.5 cursor-pointer ${
+              isRush ? "bg-emerald-600" : "bg-ink/20"
+            }`}
+          >
+            <div
+              className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                isRush ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Estimate Result Box */}
+        <div className="p-6 rounded-2xl bg-ink text-white space-y-5 shadow-xl">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-white/10 pb-4">
+            <div>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-400 font-semibold">
+                Estimated Project Investment
+              </span>
+              <div className="flex items-baseline gap-1 mt-1">
+                <span className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                  ${finalCost.toLocaleString()}
+                </span>
+                <span className="text-xs font-mono text-white/50">USD / ~{(finalCost * 86).toLocaleString()} INR</span>
+              </div>
+            </div>
+
+            <div className="text-right">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-white/50">
+                Estimated Timeline
+              </span>
+              <div className="flex items-center gap-1.5 mt-0.5 justify-end">
+                <Clock size={14} className="text-emerald-400" />
+                <span className="text-lg font-bold text-white">~{finalWeeks} Weeks</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span className="text-xs text-white/60 font-sans">
+              Includes design engineering, source code handoff &amp; 30-day warranty.
+            </span>
+            <button
+              onClick={handleSendToContact}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-all shadow-md active:scale-95 cursor-pointer"
+            >
+              <Sparkles size={13} />
+              <span>Send Scope to Contact</span>
+              <ArrowRight size={13} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
