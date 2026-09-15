@@ -58,23 +58,56 @@ export function BackgroundScene({ wallpaper, mouseX, mouseY, parallax }: Props) 
           transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
         >
           <AnimatePresence initial={false}>
-            <motion.picture
-              key={wallpaper.id}
-              className="absolute inset-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, zIndex: 1 }}
-              exit={{ opacity: 0, zIndex: 0 }}
-              transition={{ duration: reduced ? 0.01 : 0.9, ease: "easeInOut" }}
-            >
-              <source media="(max-width: 767px)" srcSet={wallpaper.mobile} />
-              <img
-                src={wallpaper.desktop}
-                alt={wallpaper.alt}
-                fetchPriority="high"
-                className="h-full w-full scale-[1.04] object-cover"
-                draggable={false}
-              />
-            </motion.picture>
+            {wallpaper.type === "video" ? (
+              <motion.div
+                key={wallpaper.id}
+                className="absolute inset-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, zIndex: 1 }}
+                exit={{ opacity: 0, zIndex: 0 }}
+                transition={{ duration: reduced ? 0.01 : 0.9, ease: "easeInOut" }}
+              >
+                {reduced ? (
+                  <img
+                    src={wallpaper.poster || wallpaper.desktop}
+                    alt={wallpaper.alt}
+                    className="h-full w-full scale-[1.04] object-cover"
+                    draggable={false}
+                  />
+                ) : (
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    poster={wallpaper.poster}
+                    className="h-full w-full scale-[1.04] object-cover pointer-events-none"
+                  >
+                    <source src={wallpaper.desktop} type="video/webm" />
+                    {wallpaper.fallback && <source src={wallpaper.fallback} type="video/mp4" />}
+                  </video>
+                )}
+              </motion.div>
+            ) : (
+              <motion.picture
+                key={wallpaper.id}
+                className="absolute inset-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, zIndex: 1 }}
+                exit={{ opacity: 0, zIndex: 0 }}
+                transition={{ duration: reduced ? 0.01 : 0.9, ease: "easeInOut" }}
+              >
+                <source media="(max-width: 767px)" srcSet={wallpaper.mobile} />
+                <img
+                  src={wallpaper.desktop}
+                  alt={wallpaper.alt}
+                  fetchPriority="high"
+                  className="h-full w-full scale-[1.04] object-cover"
+                  draggable={false}
+                />
+              </motion.picture>
+            )}
           </AnimatePresence>
         </motion.div>
       </motion.div>

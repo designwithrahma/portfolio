@@ -267,8 +267,15 @@ export function DesktopShell() {
 
   useEffect(() => {
     WALLPAPERS.forEach((wallpaper) => {
-      const image = new Image();
-      image.src = wallpaper.desktop;
+      if (wallpaper.type === "video") {
+        if (wallpaper.poster) {
+          const image = new Image();
+          image.src = wallpaper.poster;
+        }
+      } else {
+        const image = new Image();
+        image.src = wallpaper.desktop;
+      }
     });
   }, []);
 

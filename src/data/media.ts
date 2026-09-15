@@ -11,12 +11,25 @@ const px = (id: number, w: number, h: number) =>
 export interface Wallpaper {
   id: string;
   name: string;
+  type?: "image" | "video";
   desktop: string;
   mobile: string;
   alt: string;
+  poster?: string;
+  fallback?: string;
 }
 
 export const WALLPAPERS: Wallpaper[] = [
+  {
+    id: "animated-bg",
+    name: "Animated Desktop",
+    type: "video",
+    desktop: "/assets/portfolio-bg.webm",
+    fallback: "/assets/portfolio-bg.mp4",
+    poster: "/assets/portfolio-bg-poster.webp",
+    mobile: "/assets/portfolio-bg.webm",
+    alt: "Cinematic animated background",
+  },
   {
     id: "ridgelines",
     name: "Mist Ridgelines",
