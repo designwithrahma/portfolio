@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calculator, ArrowRight, Check, Sparkles, Clock } from "lucide-react";
+import { Calculator, ArrowRight, Check, Sparkles } from "lucide-react";
 
 interface Props {
   onOpenContactWithScope: (scopeSummary: string) => void;
@@ -31,25 +31,12 @@ export function EstimatorWindow({ onOpenContactWithScope }: Props) {
 
   const tier = SCOPE_TIERS.find((t) => t.id === selectedTier) || SCOPE_TIERS[0];
 
-  const rawBase = selectedServices.reduce((sum, id) => {
-    const s = SERVICES.find((item) => item.id === id);
-    return sum + (s?.base || 0);
-  }, 0);
-
-  const rawWeeks = selectedServices.reduce((sum, id) => {
-    const s = SERVICES.find((item) => item.id === id);
-    return Math.max(sum, s?.weeks || 0);
-  }, 0);
-
-  const finalCost = Math.round(rawBase * tier.multiplier * (isRush ? 1.25 : 1.0));
-  const finalWeeks = Math.max(2, Math.round(rawWeeks * tier.weeksMul * (isRush ? 0.7 : 1.0)));
-
   const handleSendToContact = () => {
     const serviceNames = selectedServices
       .map((id) => SERVICES.find((s) => s.id === id)?.label)
       .filter(Boolean)
       .join(", ");
-    const scopeMsg = `Hi Rahma, I used your Project Scope Estimator:\n- Services: ${serviceNames}\n- Tier: ${tier.label}\n- Estimated Budget: ~$${finalCost.toLocaleString()}\n- Target Timeline: ~${finalWeeks} weeks\n\nLet's discuss further!`;
+    const scopeMsg = `Hi Designwithrahma, I used your Project Scope Estimator:\n- Services: ${serviceNames}\n- Tier: ${tier.label}\n\nI would like to request a quote. Let's discuss further!`;
     onOpenContactWithScope(scopeMsg);
   };
 
@@ -158,37 +145,26 @@ export function EstimatorWindow({ onOpenContactWithScope }: Props) {
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-white/10 pb-4">
             <div>
               <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-400 font-semibold">
-                Estimated Project Investment
+                Project Pricing
               </span>
               <div className="flex items-baseline gap-1 mt-1">
-                <span className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-                  ${finalCost.toLocaleString()}
+                <span className="text-sm font-medium tracking-tight text-white max-w-sm">
+                  Project pricing depends on scope, complexity and timeline.
                 </span>
-                <span className="text-xs font-mono text-white/50">USD / ~{(finalCost * 86).toLocaleString()} INR</span>
-              </div>
-            </div>
-
-            <div className="text-right">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-white/50">
-                Estimated Timeline
-              </span>
-              <div className="flex items-center gap-1.5 mt-0.5 justify-end">
-                <Clock size={14} className="text-emerald-400" />
-                <span className="text-lg font-bold text-white">~{finalWeeks} Weeks</span>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="text-xs text-white/60 font-sans">
-              Includes design engineering, source code handoff &amp; 30-day warranty.
+              Contact: rahmathullah5975@gmail.com
             </span>
             <button
               onClick={handleSendToContact}
               className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-all shadow-md active:scale-95 cursor-pointer"
             >
               <Sparkles size={13} />
-              <span>Send Scope to Contact</span>
+              <span>Request a Quote</span>
               <ArrowRight size={13} />
             </button>
           </div>

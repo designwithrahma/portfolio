@@ -103,13 +103,13 @@ const normalizeNote = (value: unknown): StickyNote | null => {
 const getDefaultNotes = (): StickyNote[] => [
   {
     id: "note-default-welcome",
-    text: "Welcome to my workspace.\nExplore the projects, terminal, journal and guestbook.",
+    text: "Welcome to my workspace.\nExplore my projects, services and creative work.",
     color: "yellow",
     ...reorder(0),
   },
   {
     id: "note-default-focus",
-    text: "Q3 2026 focus:\nSpatial web design, WebGL physics and local-first architecture.",
+    text: "Design × Code × Visual Storytelling",
     color: "mint",
     ...reorder(1),
   },

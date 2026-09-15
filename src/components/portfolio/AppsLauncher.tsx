@@ -77,7 +77,7 @@ export function AppsLauncher({ isOpen, onClose, onOpenWindow, onOpenFolder }: Ap
     {
       title: "Main",
       items: [
-        { id: "about", label: "About RAHMA", icon: <User size={16} />, action: () => onOpenWindow("about") },
+        { id: "about", label: "About Designwithrahma", icon: <User size={16} />, action: () => onOpenWindow("about") },
         { id: "work", label: "Projects & Work", icon: <LayoutGrid size={16} />, action: () => onOpenWindow("work") },
         { id: "services", label: "Services", icon: <LayoutList size={16} />, action: () => onOpenWindow("services") },
         { id: "contact", label: "Contact", icon: <Mail size={16} />, action: () => onOpenWindow("contact") },

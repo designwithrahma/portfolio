@@ -205,7 +205,7 @@ export function PaintWindow() {
 
       {/* Footer info */}
       <div className="flex items-center justify-between text-[11px] font-mono text-ink/50 pt-2 px-1">
-        <span>Draw a signature, doodle or note on Rahma's digital canvas.</span>
+        <span>Draw a signature, doodle or note on Designwithrahma's digital canvas.</span>
         <span>{savedCount} guestbook signatures saved</span>
       </div>
     </div>

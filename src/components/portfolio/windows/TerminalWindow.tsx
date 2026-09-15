@@ -25,7 +25,7 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onNextWallpaper, o
       cmd: "init",
       output: (
         <div className="space-y-1 text-emerald-400">
-          <p className="font-bold">RAHMA® OS Terminal [Version 2026.4.2]</p>
+          <p className="font-bold">Designwithrahma Terminal [Version 2026.4.2]</p>
           <p className="text-white/60">Type <span className="text-emerald-300 font-bold">help</span> to view available commands.</p>
         </div>
       ),
@@ -183,7 +183,7 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onNextWallpaper, o
         break;
 
       case "whoami":
-        output = <span className="text-emerald-300">visitor@rahma-desktop [role: guest-explorer, access: full-read]</span>;
+        output = <span className="text-emerald-300">visitor@designwithrahma [role: guest-explorer, access: full-read]</span>;
         break;
 
       case "date":
@@ -224,7 +224,7 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onNextWallpaper, o
         {history.map((h, i) => (
           <div key={i} className="space-y-1.5">
             <div className="flex items-center gap-2 text-white/45 text-xs">
-              <span className="text-emerald-500 font-bold">visitor@rahma:~$</span>
+              <span className="text-emerald-500 font-bold">visitor@designwithrahma:~$</span>
               <span className="text-white font-medium">{h.cmd}</span>
               <span className="ml-auto text-[10px] text-white/30">{h.time}</span>
             </div>
@@ -239,7 +239,7 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onNextWallpaper, o
           }}
           className="flex items-center gap-2 pt-2"
         >
-          <span className="text-emerald-500 font-bold shrink-0">visitor@rahma:~$</span>
+          <span className="text-emerald-500 font-bold shrink-0">visitor@designwithrahma:~$</span>
           <input
             ref={inputRef}
             type="text"

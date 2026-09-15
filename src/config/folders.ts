@@ -19,19 +19,19 @@ export const DESKTOP_FOLDERS: DesktopFolder[] = [
     id: "selected-work",
     title: "Selected Work",
     description: "Shipped products and client platforms.",
-    projectIds: ["echoroom", "haction", "siddhavanam", "bizerax"],
+    projectIds: ["echoroom", "droproom"],
   },
   {
     id: "experiments",
     title: "Experiments",
     description: "Interactive studies and creative technology.",
-    projectIds: ["voxel-world", "monoshift"],
+    projectIds: ["monoshift", "tabula"],
   },
   {
     id: "archive",
     title: "Archive",
     description: "Everything in one place.",
-    projectIds: ["echoroom", "haction", "siddhavanam", "voxel-world", "monoshift", "bizerax"],
+    projectIds: ["echoroom", "droproom", "monoshift", "tabula"],
   },
 ];
 

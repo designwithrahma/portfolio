@@ -1,10 +1,5 @@
 import echoroomIcon from "@/assets/projects/echoroom.jpg";
-import hactionIcon from "@/assets/projects/haction.jpg";
-import siddhavanamIcon from "@/assets/projects/siddhavanam.jpg";
-import voxelIcon from "@/assets/projects/voxel.jpg";
 import monoshiftIcon from "@/assets/projects/monoshift.jpg";
-import bizeraxIcon from "@/assets/projects/bizerax.jpg";
-import { MEDIA } from "@/data/media";
 
 /* ── types ─────────────────────────────────────────────────── */
 
@@ -27,8 +22,6 @@ export interface ProjectConfig {
   category: string;
   kind: ProjectKind;
   year: string;
-  /** Every narrative and meta field below is optional; sections render only
-   *  when data exists, so a lean project entry stays clean and editorial. */
   role?: string;
   services?: string[];
   stack?: string[];
@@ -37,7 +30,6 @@ export interface ProjectConfig {
   challenge?: string;
   solution?: string;
   outcome?: string;
-  /** Optional extended fields. */
   responsibilities?: string[];
   process?: string;
   mobileScreens?: GalleryItem[];
@@ -47,63 +39,23 @@ export interface ProjectConfig {
   gallery?: GalleryItem[];
   live?: string;
   repo?: string;
-  /** parallax depth: 1 far · 2 mid · 3 near */
   depth?: 1 | 2 | 3;
-  /** Keep drafts in this file without rendering them publicly. */
   published?: boolean;
 }
 
 export interface Project extends Omit<ProjectConfig, "depth" | "published" | "services" | "stack" | "metrics" | "gallery"> {
-  /** Automatically generated from array order. */
   index: string;
   depth: 1 | 2 | 3;
-  /** Normalised collections so consumers never need null checks. */
   services: string[];
   stack: string[];
   metrics: Metric[];
   gallery: GalleryItem[];
 }
 
-/*
-COPY THIS TEMPLATE INSIDE PROJECT_CONFIG TO ADD NEW WORK:
-
-{
-  id: "unique-project-id",
-  title: "Project Name",
-  category: "Web Application",
-  kind: "product", // product | experiment
-  year: "2026",
-  role: "Design + Development",
-  services: ["UI / UX", "Development"],
-  stack: ["React", "TypeScript"],
-  summary: "One short sentence about the project.",
-  overview: "What the project is and who it serves.",
-  challenge: "The core problem you needed to solve.",
-  solution: "How you designed and built the solution.",
-  outcome: "The real result or impact.",
-  icon: "/projects/unique-project-id/icon.webp",
-  cover: "/projects/unique-project-id/cover.webp",
-  metrics: [{ value: "40%", label: "Faster workflow" }],
-  gallery: [
-    { src: "/projects/unique-project-id/screen-01.webp", caption: "Dashboard" },
-    { src: "/projects/unique-project-id/screen-02.webp", caption: "Mobile view" },
-  ],
-  live: "https://your-live-site.com",
-  repo: "https://github.com/you/repository",
-  depth: 2,
-  published: true,
-},
-*/
+const placeholderImage = (title: string) => `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23101013'/%3E%3Crect width='800' height='600' fill='none' stroke='%23ffffff' stroke-opacity='0.1' stroke-width='4'/%3E%3Ctext x='400' y='300' font-family='monospace' font-size='32' fill='%23ffffff' fill-opacity='0.5' text-anchor='middle' dominant-baseline='middle'%3E${encodeURIComponent(title)}%3C/text%3E%3C/svg%3E`;
 
 /* ── data ──────────────────────────────────────────────────── */
 
-/**
- * PROJECT CONTROL PANEL
- * ---------------------
- * Add, remove, reorder and customize projects only in this array.
- * `index` is automatic. Empty live/repo values hide their buttons.
- * New images can use public paths such as /projects/my-project/icon.webp.
- */
 export const PROJECT_CONFIG: ProjectConfig[] = [
   {
     id: "echoroom",
@@ -112,202 +64,86 @@ export const PROJECT_CONFIG: ProjectConfig[] = [
     kind: "product",
     year: "2026",
     role: "Product Design + Development",
-    services: ["Product Strategy", "UI / UX", "Design System", "Realtime Engineering"],
-    stack: ["Next.js", "TypeScript", "WebSockets", "Redis", "Tailwind"],
-    summary: "Anonymous realtime rooms that evaporate when the last person leaves.",
-    overview:
-      "EchoRoom is an ephemeral communication space. You open a link, pick a temporary name, and talk — no accounts, no history, no feed. Rooms exist only while someone is inside them; when the last heartbeat drops, the room and everything said in it dissolves.",
-    challenge:
-      "Realtime products usually trade privacy for convenience. The goal was zero-identity chat that still felt instant and alive — presence indicators, typing states and message sync across flaky mobile networks, all without storing a single byte of user data longer than a session.",
-    solution:
-      "A presence-first architecture: WebSocket channels scoped to in-memory Redis keys with TTLs shorter than a coffee break, optimistic UI for every action, and a design language of ripples and dissolves that makes ephemerality feel like a feature, not a limitation.",
-    outcome:
-      "Launched quietly on a Friday; passed 18k messages in the first weekend. Median message latency holds under 180ms, and the zero-account flow converts 3× more first-time visitors into active talkers than the sign-up prototype ever did.",
+    services: [],
+    stack: ["Next.js 16 App Router", "React 19", "TypeScript", "Tailwind CSS v4", "Lucide Icons", "Server-Sent Events", "Authenticated JSON commands", "In-memory TTL room store", "Playwright"],
+    summary: "EchoRoom is a temporary real-time text chat app where users can create or join private rooms with a nickname. It has no accounts, no permanent chat history, and no media sharing — just focused text communication with privacy-first room controls.",
+    overview: "EchoRoom was built around a simple idea: create a private room in seconds, share the invite link, choose a room-local nickname and start chatting. The system intentionally avoids accounts, profiles, public rooms and permanent history. When a room ends or expires, its messages, members and bans are removed from application memory.\n\nProduct Rules:\nEchoRoom is deliberately text-only. It does not include accounts, profiles, public rooms, room discovery, permanent history, images, audio, video, files, GIFs, stickers, calls or screen sharing. These limits are enforced by the data model and API, not just hidden in the interface.\n\nArchitecture:\nThe browser sends authenticated JSON commands to a Next.js Node process and receives realtime updates through a long-lived Server-Sent Events stream. Room state is kept in memory and managed through TTL cleanup.\n\nSecurity / Privacy:\nRoom IDs and 256-bit invite secrets are separated. Invite secrets are carried in the URL fragment, then scrubbed into tab-scoped storage, while the server stores only a SHA-256 hash. Session tokens are random, hashed and sent through Secure, HttpOnly, room-scoped cookies. Authorization is enforced server-side for every send, moderation action and reconnect.\n\nHistory Model:\nMessages exist only in a bounded in-memory buffer while the room is active. They are not written to SQL, disk, logs or backups. Late joiners only receive messages sent after they joined, and destroying the room clears messages, members and bans.\n\nDeployment Limitation:\nThe current architecture supports one realtime server instance because room state and fan-out are process-local. Horizontal scaling would require a future shared TTL/session store and Pub/Sub layer.",
+    challenge: "The main challenge was building a realtime chat system that feels simple for the user while keeping privacy, authorization and temporary state handling strict behind the scenes.",
+    solution: "EchoRoom uses a server-authoritative architecture with in-memory room state, expiring sessions and privacy-focused invite handling. The interface stays intentionally minimal, while moderation and authorization logic is enforced on the server rather than trusting the client.",
+    outcome: "EchoRoom became a complete privacy-focused realtime chat product and a strong exercise in realtime architecture, server-side authorization, ephemeral state and minimal product design.",
     icon: echoroomIcon,
     cover: echoroomIcon,
-    metrics: [
-      { value: "<180ms", label: "Median latency" },
-      { value: "0", label: "Accounts required" },
-      { value: "18k", label: "Weekend messages" },
-    ],
-    gallery: [
-      { src: MEDIA.shots[0].src, caption: "Fig. 01 — Room surface, dark mode" },
-      { src: MEDIA.shots[1].src, caption: "Fig. 02 — Presence prototyping" },
-      { src: MEDIA.shots[2].src, caption: "Fig. 03 — System & TTL map" },
-    ],
-    live: "https://example.com/echoroom",
-    repo: "https://github.com/example/echoroom",
+    metrics: [],
+    gallery: [],
+    live: "https://echoroom-designwithrahma.vercel.app/",
+    repo: "",
     depth: 3,
   },
   {
-    id: "haction",
-    title: "Haction",
-    category: "Business Operating Platform",
+    id: "droproom",
+    title: "DropRoom",
+    category: "Peer-to-Peer File Sharing",
     kind: "product",
     year: "2026",
-    role: "Lead Product Designer + Front-End",
-    services: ["Brand Identity", "Product Design", "Design Engineering", "Motion"],
-    stack: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Stripe"],
-    summary: "A calm operating system for small teams — sales, projects and payouts in one surface.",
-    overview:
-      "Haction replaces the nine-tab chaos of running a small company. Leads become projects, projects become invoices, invoices become payouts — one continuous surface instead of a stack of disconnected SaaS subscriptions.",
-    challenge:
-      "SMB software tends to look like an airport departures board. The brief was the opposite: a tool a five-person studio would actually enjoy opening at 9am. Dense data, zero noise, and a flow that respects how tiny teams actually hand work to each other.",
-    solution:
-      "A pipeline model where everything is a card moving left to right, a command bar that indexes the whole company, and a strict 4-color editorial palette. Every screen was designed on paper first — if it didn't work as a sketch, it didn't get built.",
-    outcome:
-      "Adopted by 3.2k workspaces in beta. Teams report ~42% less time on admin, and the single-surface model replaced an average of nine paid tools per workspace.",
-    icon: hactionIcon,
-    cover: hactionIcon,
-    metrics: [
-      { value: "3.2k", label: "Beta workspaces" },
-      { value: "-42%", label: "Admin time" },
-      { value: "9 → 1", label: "Tools replaced" },
-    ],
-    gallery: [
-      { src: MEDIA.shots[3].src, caption: "Fig. 01 — Pipeline surface" },
-      { src: MEDIA.shots[4].src, caption: "Fig. 02 — Command bar studies" },
-      { src: MEDIA.shots[5].src, caption: "Fig. 03 — Mobile hand-off" },
-    ],
-    live: "https://example.com/haction",
-    repo: "https://github.com/example/haction",
-    depth: 2,
-  },
-  {
-    id: "siddhavanam",
-    title: "Siddhavanam",
-    category: "Clinic Management System",
-    kind: "product",
-    year: "2025",
-    role: "Design + Full-Stack Development",
-    services: ["UX Research", "UI Design", "Full-Stack", "Offline-First"],
-    stack: ["React", "TypeScript", "Node.js", "Supabase", "PWA"],
-    summary: "Appointments, prescriptions and patient history for a growing Siddha & Ayurveda clinic chain.",
-    overview:
-      "Siddhavanam digitises a traditional medicine practice without flattening it. Practitioners write prescriptions the way they always have — herbs, dosages, kurippu notes — while the system quietly handles scheduling, records and follow-ups behind them.",
-    challenge:
-      "The clinics run on patchy connectivity and practitioners aged 24 to 74. The interface had to work offline, survive a shared front-desk tablet, and feel familiar to someone who has used a paper ledger for forty years.",
-    solution:
-      "An offline-first PWA with a ledger-inspired layout: big rows, generous type, Tamil + English bilingual labels, and a prescription pad that mimics the paper pad it replaced — down to the order the fields are filled in.",
-    outcome:
-      "Rolled out across 4 branches and 12k+ patient records. Front-desk phone calls dropped 38%, and the eldest practitioner on staff now prefers the tablet to paper. That was the real launch metric.",
-    icon: siddhavanamIcon,
-    cover: siddhavanamIcon,
-    metrics: [
-      { value: "12k+", label: "Patient records" },
-      { value: "4", label: "Clinic branches" },
-      { value: "-38%", label: "Front-desk calls" },
-    ],
-    gallery: [
-      { src: MEDIA.shots[6].src, caption: "Fig. 01 — Prescription pad" },
-      { src: MEDIA.shots[7].src, caption: "Fig. 02 — Field research, clinic desk" },
-      { src: MEDIA.shots[0].src, caption: "Fig. 03 — Bilingual type system" },
-    ],
-    live: "https://example.com/siddhavanam",
+    role: "Product Design + Development",
+    services: [],
+    stack: ["React 19", "TypeScript", "Vite", "Tailwind CSS v4", "WebRTC / RTCPeerConnection", "Reliable ordered RTCDataChannel", "WebSocket signaling", "Node.js", "ws", "Zod", "Vitest"],
+    summary: "DropRoom is a temporary browser-to-browser file and text sharing app. It works without accounts, a database or permanent DropRoom file storage, with content transferred directly between connected browsers.",
+    overview: "DropRoom was designed around a simple idea: create a temporary room, invite another device and send files or text directly between browsers. WebRTC handles the actual content transfer, while a lightweight signaling server only helps connected devices discover each other and exchange the information required to establish the peer-to-peer connection.\n\nArchitecture Summary:\nFile bytes and text messages travel through a reliable WebRTC RTCDataChannel between browsers. The signaling server handles only room presence and SDP/ICE negotiation, so DropRoom does not permanently store transferred files.\n\nTransfer Engine:\nDropRoom transfers files in 64 KiB chunks through a reliable ordered RTCDataChannel. It uses buffered-amount backpressure, per-file queues, rolling transfer speed and gated ETA calculations to manage transfers without overwhelming the browser connection.\n\nSignaling:\nA lightweight Node.js signaling server manages temporary rooms, connected-device presence and WebRTC SDP/ICE exchange. Room state remains in memory, supports up to four devices and expires after 45 minutes of inactivity.\n\nLocal Demo:\nFor local same-origin testing, DropRoom can use BroadcastChannel signaling between browser tabs while keeping the same WebRTC transfer engine.\n\nPrivacy:\nDropRoom's signaling layer does not carry file contents. Rooms exist only in server memory and expire automatically. Received files remain in browser memory until the user downloads them or leaves the room, after which associated object URLs are cleaned up. Files are not stored on DropRoom servers.\n\nValidation:\nRemote signaling events, transfer metadata, control frames and text payloads are validated with Zod on both sides of the connection.\n\nV1 Limits:\n- Maximum 4 devices per room\n- One-to-one sequential file queues\n- Text messages up to 20,000 characters\n- Metadata cap of 256 GiB per file\n- Received files are reconstructed in browser memory\n- Very large transfers depend on available device RAM\n- Interrupted transfers do not resume from the middle in V1\n- Lost connections report failure honestly",
+    challenge: "The main challenge was transferring files directly between browsers while keeping the product simple, temporary and honest about connection state, memory limits and transfer failures.",
+    solution: "DropRoom separates signaling from content transfer. A small signaling layer establishes peer connections, while the actual file and text data travels through WebRTC. Transfer queues, backpressure handling, validation and explicit failure states help keep the experience predictable.",
+    outcome: "DropRoom became a working experiment in peer-to-peer browser communication, combining WebRTC networking, realtime signaling, transfer-state management and privacy-focused product design in a lightweight web application.",
+    icon: placeholderImage("DropRoom"),
+    cover: placeholderImage("DropRoom"),
+    metrics: [],
+    gallery: [],
+    live: "https://droproom.designwithrahma.vercel.app/",
     repo: "",
-    depth: 2,
-  },
-  {
-    id: "voxel-world",
-    title: "Voxel Portfolio World",
-    category: "Interactive 3D Experience",
-    kind: "experiment",
-    year: "2025",
-    role: "Creative Development + 3D",
-    services: ["WebGL", "3D Art Direction", "Interaction Design", "Performance"],
-    stack: ["React Three Fiber", "TypeScript", "Blender", "Vite", "GSAP"],
-    summary: "A tiny isometric world you wander through — every building is a project.",
-    overview:
-      "Instead of another case-study grid, this experiment turned a portfolio into a place. A small voxel town where the hospital is a healthcare project, the arcade is a game, and the town hall holds the about page. Visitors walk, they don't scroll.",
-    challenge:
-      "3D on the web usually means choosing between beauty and frame rate. The world needed chunky personality, soft lighting and day-night ambience while holding 60fps on a mid-range phone — and loading before the visitor got bored.",
-    solution:
-      "Instanced geometry, one atlas texture, baked lighting and aggressive LOD. The whole island is a single draw call per chunk. Interactions are raycast-only-near-the-camera, and everything heavier than 60kb loads after the first paint.",
-    outcome:
-      "Average session time: 3 minutes — on a portfolio. It got shared in three design communities, picked up 40k visits in a month, and remains the structural idea behind this desktop you're using now.",
-    icon: voxelIcon,
-    cover: voxelIcon,
-    metrics: [
-      { value: "60fps", label: "On mid-range mobile" },
-      { value: "3min", label: "Average session" },
-      { value: "40k", label: "First-month visits" },
-    ],
-    gallery: [
-      { src: MEDIA.shots[1].src, caption: "Fig. 01 — Island blockout" },
-      { src: MEDIA.shots[2].src, caption: "Fig. 02 — Lighting bakes" },
-      { src: MEDIA.shots[3].src, caption: "Fig. 03 — Interaction map" },
-    ],
-    live: "https://example.com/voxel",
-    repo: "https://github.com/example/voxel-world",
     depth: 2,
   },
   {
     id: "monoshift",
     title: "MONO//SHIFT",
-    category: "Browser Game",
+    category: "Browser Game / Web Game",
     kind: "experiment",
-    year: "2024",
-    role: "Design + Development",
-    services: ["Game Design", "Canvas Engineering", "Sound Design", "Poster Art"],
-    stack: ["TypeScript", "Canvas 2D", "Vite", "Howler", "CSS Houdini"],
-    summary: "A one-bit puzzle runner where the world shifts between light and dark.",
-    overview:
-      "MONO//SHIFT is a weekend-sprint game that grew teeth. You run through a two-tone world; pressing SHIFT inverts which half of the level is solid floor and which half is a hole. Simple rule, mean level design.",
-    challenge:
-      "One-bit visuals leave nowhere to hide — every pixel of feedback has to carry weight. The game needed to teach its core rule with zero tutorial text, and invert the entire world state in a single frame without a stutter.",
-    solution:
-      "Levels are stored as bitmap pairs (light floor / dark floor); shifting is a bitwise swap. All feedback is shape and sound — screenshake, a 90hz thump, particles that invert with the world. The first three levels teach everything without a single word.",
-    outcome:
-      "24 levels, 60fps, 180k plays after a single forum post. Speedrunners found a shift-skip I never patched, because honestly it plays better than the intended route.",
+    year: "2026",
+    role: "Designer & Developer",
+    services: ["Game Concept", "UI / Visual Design", "Front-end Development", "Gameplay Logic", "Testing & Debugging", "Responsive Web Implementation"],
+    stack: [],
+    summary: "MONO//SHIFT is my first web game — a monochrome browser-based experience focused on simple controls, responsive interaction and clean visual design.",
+    overview: "MONO//SHIFT is the first browser game I designed and developed under Designwithrahma. The project started as an experiment to explore game mechanics, collision handling, movement and responsive browser-based gameplay while keeping the visual direction minimal and monochrome. It also gave me practical experience in testing, debugging and refining a playable interactive experience from start to finish.",
+    challenge: "The main challenge was making the game feel responsive and consistent while handling movement, collisions, level behaviour and different screen conditions inside a browser.",
+    solution: "I refined the gameplay through multiple testing passes, fixed movement and collision issues, adjusted level boundaries and improved the interface until the experience felt more stable and playable.",
+    outcome: "MONO//SHIFT became my first completed and published web game, giving me a strong foundation in interactive browser experiences and game-focused front-end development.",
     icon: monoshiftIcon,
     cover: monoshiftIcon,
-    metrics: [
-      { value: "24", label: "Hand-built levels" },
-      { value: "180k", label: "Plays, zero marketing" },
-      { value: "8ms", label: "Frame budget" },
-    ],
-    gallery: [
-      { src: MEDIA.shots[4].src, caption: "Fig. 01 — Level drafts" },
-      { src: MEDIA.shots[5].src, caption: "Fig. 02 — Bitmap pipelines" },
-      { src: MEDIA.shots[6].src, caption: "Fig. 03 — Poster series" },
-    ],
-    live: "https://example.com/monoshift",
-    repo: "https://github.com/example/monoshift",
+    metrics: [],
+    gallery: [],
+    live: "https://monoshift-designwithrahma.vercel.app/",
+    repo: "",
     depth: 1,
   },
   {
-    id: "bizerax",
-    title: "Bizerax",
-    category: "Software Solutions Studio",
+    id: "tabula",
+    title: "Tabula",
+    category: "Productivity / Visual Thinking Tool",
     kind: "product",
     year: "2026",
-    role: "Brand + Web Design & Build",
-    services: ["Brand Identity", "Web Design", "CMS Build", "SEO"],
-    stack: ["Next.js", "TypeScript", "Sanity", "Vercel", "Framer Motion"],
-    summary: "Identity, site and client portal for a boutique engineering studio.",
-    overview:
-      "Bizerax builds unglamorous, mission-critical software — logistics, billing, internal tools. They needed a presence that felt as precise as their engineering: confident typography, no stock-photo handshakes, and a client portal that made project status boringly transparent.",
-    challenge:
-      "Studio sites all say the same five adjectives. The real brief was trust: show rigour without a single bullet list of technologies, and give existing clients a reason to log in instead of sending another 'any update?' email.",
-    solution:
-      "An editorial site built around three long-form case studies, a monospace-driven identity with a chrome ribbon motif, and a read-only client portal showing live milestones pulled straight from their issue tracker.",
-    outcome:
-      "Designed, built and shipped in 3 weeks. Inbound leads doubled in the first quarter, and the 'any update?' emails dropped to almost none — the dashboard says it before clients have to ask.",
-    icon: bizeraxIcon,
-    cover: bizeraxIcon,
-    metrics: [
-      { value: "98", label: "Lighthouse performance" },
-      { value: "3wk", label: "Design → production" },
-      { value: "2×", label: "Inbound leads" },
-    ],
-    gallery: [
-      { src: MEDIA.shots[7].src, caption: "Fig. 01 — Identity system" },
-      { src: MEDIA.shots[0].src, caption: "Fig. 02 — Case study layouts" },
-      { src: MEDIA.shots[1].src, caption: "Fig. 03 — Client portal" },
-    ],
-    live: "https://example.com/bizerax",
+    role: "Designer & Developer",
+    services: ["Product Concept", "UI/UX Design", "Front-end Development", "Canvas Interaction Design", "Product Identity", "Testing & Refinement"],
+    stack: [],
+    summary: "Tabula is a local-first infinite whiteboard for notes, diagrams, flowcharts and visual thinking, designed to keep ideas flexible, spatial and easy to organize.",
+    overview: "Tabula is a visual workspace built for thinking freely on an infinite canvas. It combines notes, diagrams, flowcharts and spatial organization in a lightweight environment where users can place, move and connect ideas naturally without being limited by a traditional document layout.\n\nProduct Idea:\nOpen the board. Think visually. Build ideas freely.\n\nFocus:\n- Infinite canvas interaction\n- Notes and visual thinking\n- Diagrams and flowcharts\n- Spatial idea organization\n- Local-first usage\n- Fast, distraction-free interaction\n- Clean desktop-style experience\n\nCurrent Direction:\nThe project is being developed as a polished local-first creative tool, with strong attention to canvas interaction, usability and professional product identity.\n\nDesign Direction:\nTabula uses a clean, minimal interface that keeps the canvas as the main focus. Controls are intentionally lightweight so users can spend more time creating and less time navigating the UI.",
+    challenge: "The main challenge is making an infinite canvas powerful enough for flexible visual thinking while keeping interactions simple, predictable and easy to learn.",
+    solution: "Tabula is being designed around direct manipulation: users work directly on the canvas through movable visual elements, lightweight tools and clear interaction patterns instead of complex menus or document structures.",
+    outcome: "Tabula is currently under active development and is evolving into a complete visual thinking workspace for notes, diagrams, flowcharts and idea mapping.",
+    icon: placeholderImage("Tabula"),
+    cover: placeholderImage("Tabula"),
+    metrics: [],
+    gallery: [],
+    live: "",
     repo: "",
-    depth: 1,
+    depth: 2,
   },
 ];
 

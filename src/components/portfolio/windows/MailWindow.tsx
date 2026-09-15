@@ -3,7 +3,17 @@ import { Mail, CheckCircle2, Star, User, Calendar, ShieldCheck } from "lucide-re
 import { PORTFOLIO_CONFIG, type TestimonialItem } from "@/config/portfolio";
 
 export function MailWindow() {
-  const [selectedMail, setSelectedMail] = useState<TestimonialItem>(PORTFOLIO_CONFIG.testimonials[0]);
+  const [selectedMail, setSelectedMail] = useState<TestimonialItem | undefined>(PORTFOLIO_CONFIG.testimonials[0]);
+
+  if (!selectedMail) {
+    return (
+      <div className="h-full flex flex-col items-center justify-center bg-[#fbfbfa] text-ink p-8 text-center">
+        <Mail size={32} className="text-ink/20 mb-3 mx-auto" />
+        <h2 className="text-sm font-semibold text-ink/60">Inbox Empty</h2>
+        <p className="text-xs text-ink/40 mt-1 max-w-[200px]">Client testimonials and project reviews will appear here.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col md:flex-row bg-[#fbfbfa] text-ink overflow-hidden">

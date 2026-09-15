@@ -124,7 +124,7 @@ export function SystemMenu({
           </div>
           <div className="flex items-center justify-between border-t border-white/10 px-2.5 py-1.5 font-mono text-[9.5px] text-white/35">
             <span>v2.6.4</span>
-            <a href={PORTFOLIO_CONFIG.links.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white">rahma.studio <ExternalLink size={9} /></a>
+            <a href={PORTFOLIO_CONFIG.links.socialHub} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white">Designwithrahma <ExternalLink size={9} /></a>
           </div>
         </motion.div>
       )}

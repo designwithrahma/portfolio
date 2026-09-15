@@ -102,7 +102,7 @@ export function ShortcutsModal({ isOpen, onClose }: Props) {
 
             <div className="border-t border-white/10 bg-black/40 px-5 py-3 flex items-center justify-between text-[10px] font-mono text-white/40">
               <span className="flex items-center gap-1.5">
-                <Sparkles size={11} className="text-emerald-400" /> RAHMA® OS Keyboard Engine
+                <Sparkles size={11} className="text-emerald-400" /> Designwithrahma OS Keyboard Engine
               </span>
               <span>Press Esc or ? to dismiss</span>
             </div>

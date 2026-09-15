@@ -127,7 +127,7 @@ export function CRTShutDown({ isShutDown, onPowerOn }: CRTShutDownProps) {
             SYSTEM POWERED OFF
           </h2>
           <p className="font-mono text-xs text-white/40">
-            RAHMA® Operating Engine is resting.
+            Designwithrahma Operating Engine is resting.
           </p>
         </div>
 

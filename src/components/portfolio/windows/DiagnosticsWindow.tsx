@@ -39,7 +39,7 @@ export function DiagnosticsWindow() {
             <span>System Telemetry &amp; Diagnostics</span>
           </div>
           <h2 className="text-xl font-bold text-white tracking-tight mt-1">
-            RAHMA® Operating Engine v2.6
+            Designwithrahma Operating Engine v2.6
           </h2>
         </div>
         <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold">
