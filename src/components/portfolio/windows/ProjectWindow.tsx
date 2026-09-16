@@ -316,7 +316,7 @@ export function ProjectWindow({ id, onOpenProject, isActive = true }: Props) {
                 <ArrowUpRight size={14} className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </a>
             )}
-            {project.repo && (
+            {project.repo && project.showSource && (
               <a
                 href={project.repo}
                 target="_blank"

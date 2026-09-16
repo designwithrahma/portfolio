@@ -102,16 +102,28 @@ const normalizeNote = (value: unknown): StickyNote | null => {
 
 const getDefaultNotes = (): StickyNote[] => [
   {
-    id: "note-default-welcome",
-    text: "Welcome to my workspace.\nExplore my projects, services and creative work.",
+    id: "note-default-tabula",
+    text: "Currently building: Tabula\nA local-first infinite whiteboard for visual thinking.",
     color: "yellow",
     ...reorder(0),
   },
   {
-    id: "note-default-focus",
-    text: "Design × Code × Visual Storytelling",
+    id: "note-default-droproom",
+    text: "Latest release: DropRoom\nTemporary peer-to-peer file sharing with WebRTC.",
     color: "mint",
     ...reorder(1),
+  },
+  {
+    id: "note-default-services",
+    text: "Available for Projects\nGraphic Design · Web Development · UI/UX · B-Roll Editing",
+    color: "pink",
+    ...reorder(2),
+  },
+  {
+    id: "note-default-explore",
+    text: "Explore my work\nDouble-click project icons to open full case studies.",
+    color: "blue",
+    ...reorder(3),
   },
 ];
 

@@ -30,34 +30,6 @@ export const WALLPAPERS: Wallpaper[] = [
     mobile: "/assets/portfolio-bg.webm",
     alt: "Cinematic animated background",
   },
-  {
-    id: "ridgelines",
-    name: "Mist Ridgelines",
-    desktop: px(16166873, 2560, 1600),
-    mobile: px(16166873, 1200, 1800),
-    alt: "Layered mountain ridgelines dissolving into overcast mist.",
-  },
-  {
-    id: "monochrome-peak",
-    name: "Monochrome Peak",
-    desktop: px(30140430, 2560, 1600),
-    mobile: px(30140430, 1200, 1800),
-    alt: "Dramatic black and white peak fading into fog.",
-  },
-  {
-    id: "still-lake",
-    name: "Still Lake",
-    desktop: px(20344851, 2560, 1600),
-    mobile: px(20344851, 1200, 1800),
-    alt: "Fog-covered lake with trees dissolving into white.",
-  },
-  {
-    id: "snow-mist",
-    name: "Snow Mist",
-    desktop: px(36509425, 2560, 1600),
-    mobile: px(36509425, 1200, 1800),
-    alt: "Snowy slopes vanishing into heavy mountain mist.",
-  },
 ];
 
 /* ── other media ───────────────────────────────────────────── */

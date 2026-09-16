@@ -6,22 +6,21 @@ interface Props {
 }
 
 const SERVICES = [
-  { id: "brand", label: "Brand Identity & Art Direction", base: 1800, weeks: 2 },
-  { id: "product", label: "Product UI / UX Design & Systems", base: 2600, weeks: 3 },
-  { id: "web", label: "Full-Stack Web Engineering (Next.js)", base: 3400, weeks: 4 },
-  { id: "3d", label: "WebGL / Interactive 3D Physics", base: 2200, weeks: 2 },
+  { id: "brand", label: "Brand Identity & Art Direction" },
+  { id: "product", label: "Product UI / UX Design & Systems" },
+  { id: "web", label: "Full-Stack Web Engineering (Next.js)" },
+  { id: "3d", label: "WebGL / Interactive 3D Physics" },
 ];
 
 const SCOPE_TIERS = [
-  { id: "mvp", label: "MVP / Sprint (Core Deliverables)", multiplier: 1.0, weeksMul: 1.0 },
-  { id: "scale", label: "Scale (Full Design System + CMS)", multiplier: 1.6, weeksMul: 1.5 },
-  { id: "flagship", label: "Flagship (Bespoke Animations & 3D)", multiplier: 2.2, weeksMul: 2.0 },
+  { id: "mvp", label: "MVP / Sprint (Core Deliverables)" },
+  { id: "scale", label: "Scale (Full Design System + CMS)" },
+  { id: "flagship", label: "Flagship (Bespoke Animations & 3D)" },
 ];
 
 export function EstimatorWindow({ onOpenContactWithScope }: Props) {
   const [selectedServices, setSelectedServices] = useState<string[]>(["product", "web"]);
   const [selectedTier, setSelectedTier] = useState<string>("scale");
-  const [isRush, setIsRush] = useState(false);
 
   const toggleService = (id: string) => {
     setSelectedServices((prev) =>
@@ -53,7 +52,7 @@ export function EstimatorWindow({ onOpenContactWithScope }: Props) {
             Estimate Your Project Scope
           </h2>
           <p className="text-xs text-ink/60 mt-1">
-            Transparent pricing based on selected disciplines, scale, and delivery timelines.
+            Build your project scope to request a custom quote.
           </p>
         </div>
 
@@ -77,7 +76,6 @@ export function EstimatorWindow({ onOpenContactWithScope }: Props) {
                 >
                   <div className="space-y-0.5">
                     <p className="text-xs font-semibold text-ink">{s.label}</p>
-                    <p className="text-[10.5px] font-mono text-ink/50">Base: ${s.base.toLocaleString()}</p>
                   </div>
                   <div
                     className={`w-5 h-5 rounded-md flex items-center justify-center border ${
@@ -118,26 +116,6 @@ export function EstimatorWindow({ onOpenContactWithScope }: Props) {
               );
             })}
           </div>
-        </div>
-
-        {/* 3. Rush toggle */}
-        <div className="p-3.5 rounded-xl border border-ink/10 bg-ink/[0.02] flex items-center justify-between">
-          <div>
-            <p className="text-xs font-medium text-ink">Priority Rush Delivery</p>
-            <p className="text-[11px] text-ink/50">Compress timelines by 30% (+25% surge fee)</p>
-          </div>
-          <button
-            onClick={() => setIsRush((r) => !r)}
-            className={`w-11 h-6 rounded-full transition-colors p-0.5 cursor-pointer ${
-              isRush ? "bg-emerald-600" : "bg-ink/20"
-            }`}
-          >
-            <div
-              className={`w-5 h-5 rounded-full bg-white transition-transform ${
-                isRush ? "translate-x-5" : "translate-x-0"
-              }`}
-            />
-          </button>
         </div>
 
         {/* Estimate Result Box */}

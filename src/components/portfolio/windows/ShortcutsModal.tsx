@@ -31,7 +31,7 @@ const SHORTCUT_GROUPS = [
     category: "Easter Eggs & Pro Tips",
     items: [
       { key: "Type 'mono'", desc: "Switch entire desktop into brutalist optical art mode" },
-      { key: "Type 'reset'", desc: "Restore standard color palette and wallpaper" },
+      { key: "Type 'reset'", desc: "Restore standard color palette and animated background" },
       { key: "Drag icons", desc: "Magnetic physics repel nearby desktop items automatically" },
     ],
   },

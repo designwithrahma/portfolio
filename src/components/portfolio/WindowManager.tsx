@@ -22,7 +22,6 @@ import { FolderWindow } from "./windows/FolderWindow";
 import { getFolder } from "@/config/folders";
 import { getProject } from "@/data/projects";
 import { PORTFOLIO_CONFIG } from "@/config/portfolio";
-import type { Wallpaper } from "@/data/media";
 
 interface WindowManagerProps {
   windows: ManagedWindow[];
@@ -30,7 +29,6 @@ interface WindowManagerProps {
   activeWindowId: string | null;
   isMobile: boolean;
   origin: { x: number; y: number } | null;
-  currentWallpaper: Wallpaper;
   soundsOn: boolean;
   suppressEscape?: boolean;
   onClose: (id: string) => void;
@@ -39,13 +37,12 @@ interface WindowManagerProps {
   onOpenProject: (id: string, opts?: { from?: "work" }) => void;
   onOpenWindow: (type: WindowType) => void;
   onOpenContactWithScope?: (msg: string) => void;
-  onSelectWallpaper: (idx: number) => void;
   onToggleSounds: () => void;
   onResetLayout: () => void;
   /** Appearance + motion preferences forwarded to the Settings app. */
   appearance?: Omit<
     ComponentProps<typeof SettingsWindow>,
-    "currentWallpaper" | "soundsOn" | "onSelectWallpaper" | "onToggleSounds" | "onResetLayout" | "onOpenShortcuts"
+    "soundsOn" | "onToggleSounds" | "onResetLayout" | "onOpenShortcuts"
   >;
 }
 
@@ -73,7 +70,6 @@ export function WindowManager({
   activeWindowId,
   isMobile,
   origin,
-  currentWallpaper,
   soundsOn,
   suppressEscape,
   onClose,
@@ -82,7 +78,6 @@ export function WindowManager({
   onOpenProject,
   onOpenWindow,
   onOpenContactWithScope,
-  onSelectWallpaper,
   onToggleSounds,
   onResetLayout,
   appearance,
@@ -141,7 +136,6 @@ export function WindowManager({
             <TerminalWindow
               onOpenProject={onOpenProject}
               onOpenWindow={onOpenWindow}
-              onNextWallpaper={() => onSelectWallpaper(0)}
               onToggleSounds={onToggleSounds}
             />
           ),
@@ -158,9 +152,7 @@ export function WindowManager({
           body: (
             <SettingsWindow
               {...appearance}
-              currentWallpaper={currentWallpaper}
               soundsOn={soundsOn}
-              onSelectWallpaper={onSelectWallpaper}
               onToggleSounds={onToggleSounds}
               onResetLayout={onResetLayout}
               onOpenShortcuts={() => onOpenWindow("shortcuts")}

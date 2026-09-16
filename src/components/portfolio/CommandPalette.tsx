@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   CornerDownLeft,
-  Images,
   LayoutGrid,
   Mail,
   RotateCcw,
@@ -84,7 +83,6 @@ interface Props {
   onOpenServices?: () => void;
   onOpenProject: (id: string) => void;
   onQuickLook?: (id: string) => void;
-  onNextWallpaper: () => void;
   onToggleSounds: () => void;
   onResetIcons: () => void;
   onOpenFolder?: (folderId: string) => void;
@@ -166,7 +164,6 @@ export function CommandPalette({
   onOpenServices,
   onOpenProject,
   onQuickLook,
-  onNextWallpaper,
   onToggleSounds,
   onResetIcons,
   onOpenFolder,
@@ -232,7 +229,6 @@ export function CommandPalette({
           ]
         : []),
 
-      { id: "wall", label: "Change Wallpaper", hint: "Desktop", keywords: "wallpaper background image theme switch picture", icon: <Images size={15} className="text-white/55" />, run: onNextWallpaper },
       { id: "sounds", label: `Toggle Sound — ${soundsOn ? "Enabled" : "Muted"}`, hint: "Desktop", keywords: "sound audio mute volume toggle chimes", icon: <Volume2 size={15} className="text-white/55" />, run: onToggleSounds },
 
       /* Desktop folders */
@@ -319,7 +315,6 @@ export function CommandPalette({
     onOpenServices,
     onOpenProject,
     onQuickLook,
-    onNextWallpaper,
     onToggleSounds,
     onResetIcons,
     onOpenFolder,

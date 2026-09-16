@@ -79,7 +79,7 @@ export function ProjectContextMenu({ projectId, x, y, onClose, onOpen, onQuickLo
         </button>
       </div>
 
-      {(project.live || project.repo) && <div className="my-1 h-px bg-white/10" />}
+      {(project.live || (project.repo && project.showSource)) && <div className="my-1 h-px bg-white/10" />}
 
       {project.live && (
         <a
@@ -94,7 +94,7 @@ export function ProjectContextMenu({ projectId, x, y, onClose, onOpen, onQuickLo
           <span className="flex-1">Open Live Site</span>
         </a>
       )}
-      {project.repo && (
+      {project.repo && project.showSource && (
         <a
           href={project.repo}
           target="_blank"

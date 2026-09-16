@@ -60,7 +60,7 @@ export const PORTFOLIO_CONFIG = {
 
   contact: {
     email: "rahmathullah5975@gmail.com",
-    replyTime: "usually within 48 hours",
+    replyTime: "Usually replies within 48 hours.",
     /** Formspree / Web3Forms / your API endpoint. Empty = local demo success. */
     formEndpoint: "",
   },
@@ -95,31 +95,7 @@ export const PORTFOLIO_CONFIG = {
       label: "GitHub",
       handle: "@designwithrahma",
       href: "https://github.com/designwithrahma",
-    },
-    {
-      id: "instagram",
-      label: "Instagram",
-      handle: "",
-      href: "",
-    },
-    {
-      id: "x",
-      label: "X / Twitter",
-      handle: "",
-      href: "",
-    },
-    {
-      id: "behance",
-      label: "Behance",
-      handle: "",
-      href: "",
-    },
-    {
-      id: "linkedin",
-      label: "LinkedIn",
-      handle: "",
-      href: "",
-    },
+    }
   ] satisfies ReadonlyArray<{
     id: SocialId;
     label: string;
@@ -127,7 +103,44 @@ export const PORTFOLIO_CONFIG = {
     href: string;
   }>,
 
-  notes: [] as NoteItem[],
+  notes: [
+    {
+      id: "building-echoroom",
+      title: "Building EchoRoom: Why No Accounts?",
+      date: "Coming Soon",
+      readTime: "Draft",
+      category: "Journal",
+      summary: "Exploring the architecture and product decisions behind a truly temporary, privacy-first realtime chat application.",
+      content: ["Draft in progress..."],
+    },
+    {
+      id: "building-droproom",
+      title: "DropRoom: Why WebRTC?",
+      date: "Coming Soon",
+      readTime: "Draft",
+      category: "Journal",
+      summary: "A look into peer-to-peer file sharing directly between browsers without a database.",
+      content: ["Draft in progress..."],
+    },
+    {
+      id: "monoshift-game",
+      title: "Building My First Web Game — MONO//SHIFT",
+      date: "Coming Soon",
+      readTime: "Draft",
+      category: "Journal",
+      summary: "Lessons learned designing and programming movement, collision and interaction in a browser.",
+      content: ["Draft in progress..."],
+    },
+    {
+      id: "tabula-canvas",
+      title: "Building Tabula: Designing an Infinite Canvas",
+      date: "Coming Soon",
+      readTime: "Draft",
+      category: "Journal",
+      summary: "Interaction design challenges for an open, spatial visual thinking tool.",
+      content: ["Draft in progress..."],
+    },
+  ] as NoteItem[],
 
   testimonials: [] as TestimonialItem[],
 

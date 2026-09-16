@@ -3,7 +3,6 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Bell,
   CloudFog,
-  Images,
   Maximize,
   Minimize,
   Settings,
@@ -28,7 +27,6 @@ interface Props {
   onToggleMotion: () => void;
   onCycleWeather: () => void;
   onToggleFullscreen: () => void;
-  onOpenWallpaper: () => void;
   onOpenSettings: () => void;
   onClearNotifications: () => void;
 }
@@ -78,7 +76,6 @@ export function ControlCenter({
   onToggleMotion,
   onCycleWeather,
   onToggleFullscreen,
-  onOpenWallpaper,
   onOpenSettings,
   onClearNotifications,
 }: Props) {
@@ -149,13 +146,6 @@ export function ControlCenter({
           </div>
 
           <div className="mt-2 flex gap-2">
-            <button
-              type="button"
-              onClick={onOpenWallpaper}
-              className="flex min-h-9 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-[9px] border border-white/10 bg-white/[0.05] text-[11px] text-white/75 transition-colors hover:bg-white/[0.1] hover:text-white"
-            >
-              <Images size={13} /> Wallpaper
-            </button>
             <button
               type="button"
               onClick={onOpenSettings}

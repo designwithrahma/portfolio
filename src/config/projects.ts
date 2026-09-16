@@ -39,6 +39,7 @@ export interface ProjectConfig {
   gallery?: GalleryItem[];
   live?: string;
   repo?: string;
+  showSource?: boolean;
   depth?: 1 | 2 | 3;
   published?: boolean;
 }
@@ -77,6 +78,7 @@ export const PROJECT_CONFIG: ProjectConfig[] = [
     gallery: [],
     live: "https://echoroom-designwithrahma.vercel.app/",
     repo: "",
+    showSource: false,
     depth: 3,
   },
   {
@@ -99,6 +101,7 @@ export const PROJECT_CONFIG: ProjectConfig[] = [
     gallery: [],
     live: "https://droproom.designwithrahma.vercel.app/",
     repo: "",
+    showSource: false,
     depth: 2,
   },
   {
@@ -121,6 +124,7 @@ export const PROJECT_CONFIG: ProjectConfig[] = [
     gallery: [],
     live: "https://monoshift-designwithrahma.vercel.app/",
     repo: "",
+    showSource: false,
     depth: 1,
   },
   {
@@ -143,6 +147,7 @@ export const PROJECT_CONFIG: ProjectConfig[] = [
     gallery: [],
     live: "",
     repo: "",
+    showSource: false,
     depth: 2,
   },
 ];

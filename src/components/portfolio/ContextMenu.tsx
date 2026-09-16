@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
-  Images,
   Keyboard,
   LayoutGrid,
   Mail,
@@ -34,7 +33,6 @@ import { DESKTOP_FOLDERS } from "@/config/folders";
 interface Props {
   x: number;
   y: number;
-  wallpaperName: string;
   soundsOn: boolean;
   hasCustomLayout: boolean;
   onClose: () => void;
@@ -54,7 +52,6 @@ interface Props {
   onOpenShortcuts: () => void;
   onOpenServices?: () => void;
   onQuickLook?: () => void;
-  onNextWallpaper: () => void;
   onToggleSounds: () => void;
   onResetIcons: () => void;
   onSortIcons?: (by: "name" | "year" | "category") => void;
@@ -77,7 +74,6 @@ const itemCls =
 export function ContextMenu({
   x,
   y,
-  wallpaperName,
   soundsOn,
   hasCustomLayout,
   onClose,
@@ -97,7 +93,6 @@ export function ContextMenu({
   onOpenShortcuts,
   onOpenServices,
   onQuickLook,
-  onNextWallpaper,
   onToggleSounds,
   onResetIcons,
   onSortIcons,
@@ -267,13 +262,6 @@ export function ContextMenu({
         <span className="flex-1">System Settings</span>
       </button>
 
-      <button type="button" role="menuitem" onClick={() => { onNextWallpaper(); onClose(); }} className={itemCls}>
-        <Images size={14} className="text-white/55" />
-        <span className="flex-1">Next Wallpaper</span>
-        <span className="max-w-[70px] truncate font-mono text-[9px] uppercase tracking-wider text-white/40">
-          {wallpaperName}
-        </span>
-      </button>
 
       <button
         type="button"

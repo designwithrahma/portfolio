@@ -8,7 +8,6 @@ interface Props {
   onOpenWindow: (
     type: "about" | "work" | "contact" | "notes" | "resume" | "mail" | "settings" | "services",
   ) => void;
-  onNextWallpaper: () => void;
   onToggleSounds: () => void;
 }
 
@@ -18,7 +17,7 @@ interface CommandHistory {
   time: string;
 }
 
-export function TerminalWindow({ onOpenProject, onOpenWindow, onNextWallpaper, onToggleSounds }: Props) {
+export function TerminalWindow({ onOpenProject, onOpenWindow, onToggleSounds }: Props) {
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<CommandHistory[]>([
     {
@@ -69,7 +68,6 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onNextWallpaper, o
               <p><span className="text-emerald-400 font-bold">reviews</span> : Read client testimonials</p>
               <p><span className="text-emerald-400 font-bold">contact</span> : Get in touch or send a message</p>
               <p><span className="text-emerald-400 font-bold">skills</span> : List design & tech stack</p>
-              <p><span className="text-emerald-400 font-bold">wallpaper</span> : Cycle desktop wallpaper</p>
               <p><span className="text-emerald-400 font-bold">sounds</span> : Toggle UI sound effects</p>
               <p><span className="text-emerald-400 font-bold">whoami</span> : Display visitor permissions</p>
               <p><span className="text-emerald-400 font-bold">date</span> : Print current system timestamp</p>
@@ -168,12 +166,6 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onNextWallpaper, o
             <p><span className="text-white/50">Tools:</span> {PORTFOLIO_CONFIG.resume.skills.tools.join(", ")}</p>
           </div>
         );
-        break;
-
-      case "wallpaper":
-      case "bg":
-        onNextWallpaper();
-        output = <span className="text-emerald-400">Switched desktop wallpaper successfully.</span>;
         break;
 
       case "sounds":

@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { Image, Volume2, VolumeX, RotateCcw, Monitor, SlidersHorizontal, Waves } from "lucide-react";
-import { WALLPAPERS, type Wallpaper } from "@/data/media";
+
 import type { DockMagnification, IconSize, MotionMode } from "@/utils/storage";
 
 interface Props {
-  currentWallpaper: Wallpaper;
   soundsOn: boolean;
-  onSelectWallpaper: (idx: number) => void;
   onToggleSounds: () => void;
   onResetLayout: () => void;
   onOpenShortcuts: () => void;
@@ -113,9 +111,7 @@ function ToggleRow({
 }
 
 export function SettingsWindow({
-  currentWallpaper,
   soundsOn,
-  onSelectWallpaper,
   onToggleSounds,
   onResetLayout,
   onOpenShortcuts,
@@ -135,16 +131,13 @@ export function SettingsWindow({
   onToggleMusic,
   onChangeVolume,
 }: Props) {
-  const [activeTab, setActiveTab] = useState<"wallpaper" | "appearance" | "audio" | "system">("wallpaper");
+  const [activeTab, setActiveTab] = useState<"appearance" | "audio" | "system">("appearance");
 
   return (
     <div className="h-full flex flex-col md:flex-row bg-[#f8f7f4] text-ink overflow-hidden">
       {/* Sidebar Tabs */}
       <div className="w-full md:w-[200px] shrink-0 border-b md:border-b-0 md:border-r border-ink/10 p-3 bg-white space-y-1">
-        <button onClick={() => setActiveTab("wallpaper")} className={TAB_CLASS(activeTab === "wallpaper")}>
-          <Image size={14} />
-          <span>Wallpapers</span>
-        </button>
+
         <button onClick={() => setActiveTab("appearance")} className={TAB_CLASS(activeTab === "appearance")}>
           <SlidersHorizontal size={14} />
           <span>Appearance</span>
@@ -161,50 +154,6 @@ export function SettingsWindow({
 
       {/* Tab Panels */}
       <div className="flex-1 overflow-y-auto p-5 sm:p-8 os-scroll space-y-6">
-        {activeTab === "wallpaper" && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-lg font-semibold text-ink">Desktop Wallpaper Gallery</h2>
-              <p className="text-xs text-ink/60 mt-0.5">
-                Select a cinematic backdrop for your personal operating system.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {WALLPAPERS.map((w, idx) => (
-                <button
-                  key={w.id}
-                  type="button"
-                  onClick={() => onSelectWallpaper(idx)}
-                  aria-pressed={currentWallpaper.id === w.id}
-                  className={[
-                    "group relative rounded-xl overflow-hidden border-2 cursor-pointer transition-all text-left",
-                    currentWallpaper.id === w.id
-                      ? "border-emerald-600 shadow-md ring-2 ring-emerald-500/20"
-                      : "border-ink/10 hover:border-ink/30",
-                  ].join(" ")}
-                >
-                  <div className="aspect-[16/10] overflow-hidden bg-black/40">
-                    <img
-                      src={w.desktop}
-                      alt={w.alt}
-                      loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-2.5 bg-white flex items-center justify-between">
-                    <span className="text-xs font-medium text-ink">{w.name}</span>
-                    {currentWallpaper.id === w.id && (
-                      <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono text-[9px] font-bold">
-                        ACTIVE
-                      </span>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {activeTab === "appearance" && (
           <div className="space-y-5 max-w-xl">

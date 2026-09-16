@@ -60,8 +60,6 @@ import {
   type DesktopPreferences,
 } from "@/utils/storage";
 
-/** Legacy keys are migrated into the versioned storage namespaces. */
-const LEGACY_WALLPAPER_KEY = "rahma-wallpaper";
 const LEGACY_LAYOUT_PREFIX = "rahma-icon-offsets";
 
 const APP_TITLES: Partial<Record<WindowType, string>> = {
@@ -113,7 +111,6 @@ export function DesktopShell() {
   const [saver, setSaver] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [isShutDown, setIsShutDown] = useState(false);
-  const [wallToast, setWallToast] = useState(0);
   const [isMonoMode, setIsMonoMode] = useState(false);
   const [controlCenterOpen, setControlCenterOpen] = useState(false);
   const [appsLauncherOpen, setAppsLauncherOpen] = useState(false);
@@ -138,19 +135,6 @@ export function DesktopShell() {
   const { history: notifications, toasts, notify, dismissToast, clearHistory } = useNotifications();
   const [offsets, setOffsets] = useState<Record<string, IconOffset>>(loadOffsets);
   const [soundsOn, setSoundsOn] = useState(uiSound.enabled);
-  const [wallIdx, setWallIdx] = useState(() => {
-    /* Preference store first, then the legacy key for existing visitors. */
-    let savedId = storedPreferences.wallpaperId;
-    if (!savedId) {
-      try {
-        savedId = localStorage.getItem(LEGACY_WALLPAPER_KEY);
-      } catch {
-        savedId = null;
-      }
-    }
-    const index = savedId ? WALLPAPERS.findIndex((wallpaper) => wallpaper.id === savedId) : 0;
-    return index >= 0 ? index : 0;
-  });
   const [showHint, setShowHint] = useState(false);
 
   const bp = useBreakpoint();
@@ -235,7 +219,6 @@ export function DesktopShell() {
   useEffect(() => {
     savePreferences({
       ...storedPreferences,
-      wallpaperId: WALLPAPERS[wallIdx].id,
       soundsOn,
       musicOn: musicPlayerOpen,
       volume,
@@ -255,7 +238,6 @@ export function DesktopShell() {
     soundsOn,
     storedPreferences,
     volume,
-    wallIdx,
     weather,
     weatherEffects,
   ]);
@@ -403,29 +385,6 @@ export function DesktopShell() {
     });
   }, []);
 
-  const nextWallpaper = useCallback(() => {
-    uiSound.play("switch");
-    setWallIdx((index) => {
-      const next = (index + 1) % WALLPAPERS.length;
-      notify("Wallpaper changed", WALLPAPERS[next].name);
-      return next;
-    });
-    setWallToast(Date.now());
-  }, [notify]);
-
-  const selectWallpaper = useCallback((index: number) => {
-    uiSound.play("switch");
-    const next = ((index % WALLPAPERS.length) + WALLPAPERS.length) % WALLPAPERS.length;
-    setWallIdx(next);
-    setWallToast(Date.now());
-    notify("Wallpaper changed", WALLPAPERS[next].name);
-  }, [notify]);
-
-  useEffect(() => {
-    if (!wallToast) return;
-    const timer = window.setTimeout(() => setWallToast(0), 2200);
-    return () => window.clearTimeout(timer);
-  }, [wallToast]);
 
   const toggleSounds = useCallback(() => {
     setSoundsOn((current) => {
@@ -635,7 +594,7 @@ export function DesktopShell() {
       onPointerMove={onPointerMove}
       onContextMenu={onContextMenu}
     >
-      <BackgroundScene wallpaper={WALLPAPERS[wallIdx]} mouseX={mouseX} mouseY={mouseY} parallax={parallax} />
+      <BackgroundScene wallpaper={WALLPAPERS[0]} mouseX={mouseX} mouseY={mouseY} parallax={parallax} />
       <WeatherAtmosphere weather={weatherEffects && motionAllowed ? weather : "clear"} />
       <IdentityMark
         hasCustomLayout={Object.keys(offsets).length > 0}
@@ -680,7 +639,6 @@ export function DesktopShell() {
         onToggleMotion={toggleMotion}
         onCycleWeather={cycleWeather}
         onToggleFullscreen={toggleFullscreen}
-        onOpenWallpaper={() => { nextWallpaper(); setControlCenterOpen(false); }}
         onOpenSettings={() => { openWindow("settings"); setControlCenterOpen(false); }}
         onClearNotifications={clearHistory}
       />
@@ -726,7 +684,6 @@ export function DesktopShell() {
         activeWindowId={activeWindowId}
         isMobile={isMobile}
         origin={origin}
-        currentWallpaper={WALLPAPERS[wallIdx]}
         soundsOn={soundsOn}
         /*
           While any overlay is open, Escape belongs to that overlay alone so a
@@ -751,7 +708,6 @@ export function DesktopShell() {
         onOpenProject={openProject}
         onOpenWindow={openWindow}
         onOpenContactWithScope={() => openWindow("contact")}
-        onSelectWallpaper={selectWallpaper}
         onToggleSounds={toggleSounds}
         onResetLayout={resetIcons}
         appearance={{
@@ -778,7 +734,6 @@ export function DesktopShell() {
             key="context-menu"
             x={menu.x}
             y={menu.y}
-            wallpaperName={WALLPAPERS[wallIdx].name}
             soundsOn={soundsOn}
             hasCustomLayout={Object.keys(offsets).length > 0}
             onClose={() => setMenu(null)}
@@ -801,7 +756,6 @@ export function DesktopShell() {
               const selectedProjectId = [...selectedIds].find((id) => Boolean(getProject(id)));
               setQuickLookId(hoveredProjectId ?? selectedProjectId ?? PROJECTS[0]?.id ?? null);
             }}
-            onNextWallpaper={nextWallpaper}
             onToggleSounds={toggleSounds}
             onResetIcons={resetIcons}
             onSortIcons={sortIcons}
@@ -856,7 +810,6 @@ export function DesktopShell() {
             onOpenServices={() => openWindow("services")}
             onOpenProject={openProject}
             onQuickLook={setQuickLookId}
-            onNextWallpaper={nextWallpaper}
             onToggleSounds={toggleSounds}
             onResetIcons={resetIcons}
             onOpenFolder={openFolder}
@@ -918,20 +871,6 @@ export function DesktopShell() {
         onVolumeChange={setVolume}
         onPlaybackChange={handleMusicPlayback}
       />
-      <AnimatePresence>
-        {wallToast > 0 && (
-          <motion.p
-            key={wallToast}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            aria-live="polite"
-            className="pointer-events-none fixed bottom-[92px] right-5 z-40 flex items-center gap-2 rounded-full border border-white/10 bg-[#101013]/80 px-3 py-1.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-white/75 backdrop-blur"
-          >
-            <Images size={11} />{WALLPAPERS[wallIdx].name}
-          </motion.p>
-        )}
-      </AnimatePresence>
       <Screensaver
         active={saver && !paletteOpen && !shortcutsOpen && !musicPlayerOpen}
         trackTitle={screensaverTrack}

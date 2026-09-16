@@ -161,7 +161,6 @@ export type DockMagnification = "off" | "low" | "medium";
 export type MotionMode = "full" | "reduced";
 
 export interface DesktopPreferences {
-  wallpaperId: string | null;
   soundsOn: boolean;
   musicOn: boolean;
   volume: number;
@@ -174,7 +173,6 @@ export interface DesktopPreferences {
 }
 
 export const DEFAULT_PREFERENCES: DesktopPreferences = {
-  wallpaperId: null,
   soundsOn: false,
   musicOn: false,
   volume: 0.6,
@@ -209,7 +207,6 @@ const isPreferences = (value: unknown): value is DesktopPreferences => {
   /* Fields are optional for forward/backward migrations, but values that are
      present must be valid. Defaults fill any missing fields below. */
   return (
-    optional("wallpaperId", (entry) => entry === null || typeof entry === "string") &&
     optional("soundsOn", (entry) => typeof entry === "boolean") &&
     optional("musicOn", (entry) => typeof entry === "boolean") &&
     optional("volume", (entry) => typeof entry === "number" && entry >= 0 && entry <= 1) &&
