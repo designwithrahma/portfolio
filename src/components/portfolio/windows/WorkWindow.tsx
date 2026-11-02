@@ -40,11 +40,11 @@ export function WorkWindow({ onOpenProject }: Props) {
             <label className="relative">
               <span className="sr-only">Filter projects</span>
               <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink/40" />
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects" className="h-8 w-full rounded-[8px] border border-ink/15 bg-white pl-8 pr-3 text-xs outline-none focus:border-ink/40 sm:w-44" />
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects" className="h-10 sm:h-8 w-full rounded-[8px] border border-ink/15 bg-white pl-8 pr-3 text-[16px] sm:text-xs outline-none focus:border-ink/40 sm:w-44" />
             </label>
             <div className="flex gap-1 rounded-[8px] border border-ink/10 bg-white p-0.5" role="group" aria-label="Filter by project type">
               {FILTERS.map((item) => (
-                <button key={item.id} type="button" aria-pressed={filter === item.id} onClick={() => setFilter(item.id)} className={`h-7 cursor-pointer rounded-[6px] px-2.5 font-mono text-[9.5px] uppercase tracking-[0.14em] ${filter === item.id ? "bg-ink text-white" : "text-ink/55 hover:text-ink"}`}>{item.label}</button>
+                <button key={item.id} type="button" aria-pressed={filter === item.id} onClick={() => setFilter(item.id)} className={`min-h-10 sm:min-h-8 cursor-pointer rounded-[6px] px-2.5 text-[12px] font-medium ${filter === item.id ? "bg-ink text-white" : "text-ink/55 hover:text-ink"}`}>{item.label}</button>
               ))}
             </div>
           </div>
@@ -53,7 +53,7 @@ export function WorkWindow({ onOpenProject }: Props) {
         <div className="os-scroll flex items-center gap-1.5 overflow-x-auto py-3">
           <span className="mr-1 flex items-center gap-1 whitespace-nowrap font-mono text-[10px] uppercase tracking-wider text-ink/40"><FilterIcon size={10} /> Tech:</span>
           {STACKS.map((stack) => (
-            <button key={stack} type="button" onClick={() => setSelectedTech(stack)} aria-pressed={selectedTech === stack} className={`cursor-pointer whitespace-nowrap rounded-md px-2.5 py-1 font-mono text-[10.5px] ${selectedTech === stack ? "bg-ink text-white" : "bg-ink/5 text-ink/65 hover:bg-ink/10"}`}>{stack}</button>
+            <button key={stack} type="button" onClick={() => setSelectedTech(stack)} aria-pressed={selectedTech === stack} className={`min-h-10 sm:min-h-8 cursor-pointer whitespace-nowrap rounded-md px-2.5 py-1 text-[12px] ${selectedTech === stack ? "bg-ink text-white" : "bg-ink/5 text-ink/65 hover:bg-ink/10"}`}>{stack}</button>
           ))}
         </div>
 

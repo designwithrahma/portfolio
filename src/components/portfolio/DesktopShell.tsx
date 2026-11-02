@@ -323,6 +323,11 @@ export function DesktopShell() {
     setOrigin(null);
     setWindows((current) => current.some((item) => item.id === id) ? current : [...current, { id, type: "folder", folderId }]);
     setActiveWindowId(id);
+    setMinimizedIds((current) => {
+      const updated = new Set(current);
+      updated.delete(id);
+      return updated;
+    });
   }, [notify]);
 
   /** Recent list is re-read after opens so the System Menu stays current. */
@@ -595,7 +600,7 @@ export function DesktopShell() {
       onPointerMove={onPointerMove}
       onContextMenu={onContextMenu}
     >
-      <BackgroundScene wallpaper={WALLPAPERS[0]} mouseX={mouseX} mouseY={mouseY} parallax={parallax} />
+      <BackgroundScene wallpaper={WALLPAPERS[0]} mouseX={mouseX} mouseY={mouseY} parallax={parallax} motionEnabled={motionAllowed} />
       <WeatherAtmosphere weather={weatherEffects && motionAllowed ? weather : "clear"} />
       <IdentityMark
         hasCustomLayout={Object.keys(offsets).length > 0}

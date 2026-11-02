@@ -57,9 +57,10 @@ export function ResumeWindow() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex border-b border-ink/10 gap-6 text-sm font-medium">
+        <div className="flex flex-wrap border-b border-ink/10 gap-x-4 gap-y-2 text-sm font-medium">
           <button
             onClick={() => setActiveTab("experience")}
+            aria-pressed={activeTab === "experience"}
             className={[
               "pb-2.5 flex items-center gap-2 border-b-2 transition-colors cursor-pointer",
               activeTab === "experience"
@@ -72,6 +73,7 @@ export function ResumeWindow() {
           </button>
           <button
             onClick={() => setActiveTab("skills")}
+            aria-pressed={activeTab === "skills"}
             className={[
               "pb-2.5 flex items-center gap-2 border-b-2 transition-colors cursor-pointer",
               activeTab === "skills"
@@ -84,6 +86,7 @@ export function ResumeWindow() {
           </button>
           <button
             onClick={() => setActiveTab("education")}
+            aria-pressed={activeTab === "education"}
             className={[
               "pb-2.5 flex items-center gap-2 border-b-2 transition-colors cursor-pointer",
               activeTab === "education"

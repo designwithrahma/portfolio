@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -17,12 +18,28 @@ interface Props {
 
 export function LightboxModal({ images, initialIndex, isOpen, onClose, onIndexChange }: Props) {
   const current = images[initialIndex];
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    dialogRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+    return () => previousFocus?.focus({ preventScroll: true });
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === "Tab") {
+        const buttons = Array.from(dialogRef.current?.querySelectorAll<HTMLButtonElement>("button:not([disabled])") ?? []);
+        if (!buttons.length) return;
+        const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
+        const next = e.shiftKey ? (index <= 0 ? buttons.length - 1 : index - 1) : (index + 1) % buttons.length;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        buttons[next].focus();
+      } else if (e.key === "Escape") {
         e.preventDefault();
         e.stopImmediatePropagation();
         onClose();
@@ -39,9 +56,9 @@ export function LightboxModal({ images, initialIndex, isOpen, onClose, onIndexCh
 
   if (!isOpen || !current) return null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-[98] flex items-center justify-center p-4 sm:p-8">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Project image viewer" className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-8">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -102,6 +119,7 @@ export function LightboxModal({ images, initialIndex, isOpen, onClose, onIndexCh
           </p>
         </div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }

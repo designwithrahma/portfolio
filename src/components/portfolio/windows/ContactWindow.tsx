@@ -127,7 +127,7 @@ export function ContactWindow({ scope }: { scope?: { text: string; id: number } 
                 copied ? "opacity-100" : "opacity-0",
               ].join(" ")}
             >
-              Copied
+              {copied ? "Copied" : ""}
             </span>
           </div>
 

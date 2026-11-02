@@ -242,6 +242,8 @@ export function WindowManager({
               windowId={win.id}
               windowIndex={idx}
               minimized={minimizedIds.has(win.id)}
+              isActive={isActive}
+              reduceMotion={appearance?.motionMode === "reduced"}
               isMobile={isMobile}
               title={resolved.title}
               kicker={resolved.kicker}

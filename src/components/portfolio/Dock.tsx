@@ -61,7 +61,7 @@ function DockItem({
       {innerContent}
     </a>
   ) : (
-    <button type="button" onClick={entry.onClick} aria-label={entry.label} aria-pressed={entry.active} className={classes}>
+    <button type="button" data-dock-apps={entry.key === "apps" ? "" : undefined} onClick={entry.onClick} aria-label={entry.label} aria-pressed={entry.active} className={classes}>
       {innerContent}
     </button>
   );
@@ -117,9 +117,10 @@ export function Dock({
     Below that, keep the five primary destinations visible; the launcher
     still provides access to the remaining apps.
   */
-  const [veryNarrow, setVeryNarrow] = useState(() => window.innerWidth < 460);
+  const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
+  const veryNarrow = viewportWidth < 460;
   useEffect(() => {
-    const onResize = () => setVeryNarrow(window.innerWidth < 460);
+    const onResize = () => setViewportWidth(window.innerWidth);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
@@ -212,6 +213,8 @@ export function Dock({
   }, []);
 
   const itemEntries = entries.filter((entry): entry is Entry => entry !== "separator");
+  const separatorCount = entries.length - itemEntries.length;
+  const overflowing = !isMobile && itemEntries.length * 44 + separatorCount * 12 + (entries.length - 1) * 4 + 12 > viewportWidth - 24;
   const firstKey = itemEntries[0]?.key;
   const lastKey = itemEntries[itemEntries.length - 1]?.key;
 
@@ -230,7 +233,7 @@ export function Dock({
         setScales(null);
       }}
     >
-      <div className="shadow-dock flex max-w-[calc(100vw-24px)] items-center gap-1 rounded-[18px] border border-white/10 bg-[#141417]/80 p-1.5 backdrop-blur-xl">
+      <div className={`shadow-dock flex max-w-[calc(100vw-24px)] items-center gap-1 rounded-[18px] border border-white/10 bg-[#141417]/80 p-1.5 backdrop-blur-xl ${overflowing ? "overflow-x-auto" : ""}`}>
         {entries.map((entry, index) =>
           entry === "separator" ? (
             <Separator key={`separator-${index}`} />

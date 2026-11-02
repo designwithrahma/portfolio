@@ -23,3 +23,14 @@ This pass follows [Unslop by Damir Sokolovsky](https://github.com/heydamir/unslo
 - The repository currently supplies only one wallpaper, not a wallpaper library; there is no complete persistent light/dark theme selector. Neither was fabricated in this pass.
 - Two projects use generated placeholder graphics and the reel showcase has no playable media. The existing data and links need owner-provided assets where appropriate. Some existing portfolio claims, experience and links have not been independently verified.
 - This is a targeted refinement, not a comprehensive rewrite of every secondary app or every small text style. Full physical-device, assistive-technology, external-link and regression testing is still recommended.
+
+## Independent second review
+
+- Restored minimized Finder folders when reopened, brought the desktop launcher above active windows, and made a crowded desktop dock horizontally scrollable instead of clipping running apps.
+- Moved project image and reel dialogs above the dock and window stack, with focus containment and restoration. The reel player is covered by an isolated synthetic browser-test fixture because no playable owner reel is configured.
+- The Background Motion preference now stops the wallpaper video and scale loop, including when reduced motion is selected in Settings. Terminal output wraps on small screens and supports whitespace in project commands. Mobile sheets underneath the active sheet are inert; résumé navigation wraps at narrow widths.
+- Owner-supplied assets and optional content are listed in [owner-assets.md](owner-assets.md).
+
+### Repeatable checks
+
+With dependencies installed and a Vite server running, install Playwright Chromium (`npx playwright install chromium`) and run `npm run test:browser`. Set `PORTFOLIO_TEST_URL` if the server is not at `http://127.0.0.1:5173/`. The script tests representative paths, not every combination or a physical-device/accessibility audit.

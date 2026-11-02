@@ -49,9 +49,8 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onToggleSounds }: 
     const time = new Date().toLocaleTimeString();
     let output: React.ReactNode = "";
 
-    const parts = cmd.split(" ");
-    const main = parts[0];
-    const arg = parts[1];
+    const [main, ...args] = cmd.split(/\s+/);
+    const arg = args.join(" ");
 
     switch (main) {
       case "help":
@@ -93,9 +92,9 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onToggleSounds }: 
           <div className="space-y-1 text-white/80">
             <p className="text-emerald-300 font-semibold">Project Index:</p>
             {PROJECTS.map((p) => (
-              <div key={p.id} className="flex items-center gap-3 text-xs">
+              <div key={p.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
                 <span className="text-emerald-400 font-bold w-6">{p.index}</span>
-                <span className="font-bold text-white w-32">{p.title}</span>
+                <span className="font-bold text-white sm:w-32">{p.title}</span>
                 <span className="text-white/50">{p.category} ({p.year})</span>
                 <button
                   onClick={() => onOpenProject(p.id)}
@@ -111,7 +110,7 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onToggleSounds }: 
 
       case "open":
         if (!arg) {
-          output = <span className="text-amber-400">Usage: open &lt;project-id&gt; (e.g. open echoroom, open haction)</span>;
+          output = <span className="text-amber-400">Usage: open &lt;project-id&gt; (e.g. open echoroom, open droproom)</span>;
         } else {
           const match = PROJECTS.find((p) => p.id.toLowerCase() === arg || p.title.toLowerCase() === arg);
           if (match) {
@@ -204,7 +203,9 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onToggleSounds }: 
   return (
     <div
       ref={scrollRef}
-      onClick={() => inputRef.current?.focus()}
+      onClick={(event) => {
+        if (!(event.target as HTMLElement).closest("button, a, input")) inputRef.current?.focus();
+      }}
       onScroll={(event) => {
         const element = event.currentTarget;
         followOutputRef.current =
@@ -215,7 +216,7 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onToggleSounds }: 
       <div className="space-y-4 flex-1">
         {history.map((h, i) => (
           <div key={i} className="space-y-1.5">
-            <div className="flex items-center gap-2 text-white/45 text-xs">
+            <div className="flex flex-wrap items-center gap-2 break-all text-white/45 text-xs">
               <span className="text-emerald-500 font-bold">visitor@designwithrahma:~$</span>
               <span className="text-white font-medium">{h.cmd}</span>
               <span className="ml-auto text-[10px] text-white/30">{h.time}</span>
@@ -239,7 +240,7 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onToggleSounds }: 
             value={input}
             onChange={(e) => setInput(e.target.value)}
             autoFocus
-            className="min-w-0 flex-1 bg-transparent text-white outline-none border-none font-mono text-[13px] caret-emerald-400"
+            className="min-w-0 flex-1 bg-transparent text-white outline-none border-none font-mono text-[16px] sm:text-[13px] caret-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-300"
             placeholder="Type 'help'..."
           />
           <button type="submit" aria-label="Send command" className="text-white/30 hover:text-emerald-400">

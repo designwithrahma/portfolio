@@ -388,6 +388,24 @@ export function CommandPalette({
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            event.stopPropagation();
+            onClose();
+          } else if (event.key === "Tab") {
+            const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>("input, button:not([disabled])"));
+            if (!controls.length) return;
+            const first = controls[0];
+            const last = controls[controls.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              first.focus();
+            }
+          }
+        }}
         initial={{ opacity: 0, scale: reduced ? 1 : 0.97, y: reduced ? 0 : 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: reduced ? 1 : 0.97, y: reduced ? 0 : 6, transition: { duration: 0.14 } }}
