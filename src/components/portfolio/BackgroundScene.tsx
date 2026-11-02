@@ -8,6 +8,7 @@ interface Props {
   mouseX: MotionValue<number>; // -0.5 … 0.5
   mouseY: MotionValue<number>;
   parallax: boolean;
+  motionEnabled: boolean;
 }
 
 /** the desktop quietly matches the visitor's local time of day */
@@ -26,7 +27,7 @@ function useDayTint(): string {
  * Barely-noticeable drift (max ~13px), slow breathing scale, crossfade
  * between wallpapers, time-of-day tint.
  */
-export function BackgroundScene({ wallpaper, mouseX, mouseY, parallax }: Props) {
+export function BackgroundScene({ wallpaper, mouseX, mouseY, parallax, motionEnabled }: Props) {
   const reduced = useReducedMotion();
   const drift = parallax && !reduced;
   const tint = useDayTint();
@@ -54,8 +55,8 @@ export function BackgroundScene({ wallpaper, mouseX, mouseY, parallax }: Props) 
         {/* perpetual breathing — independent of wallpaper swaps */}
         <motion.div
           className="absolute inset-0"
-          animate={reduced ? undefined : { scale: [1, 1.015, 1] }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+          animate={!motionEnabled || reduced ? { scale: 1 } : { scale: [1, 1.015, 1] }}
+          transition={!motionEnabled || reduced ? { duration: 0 } : { duration: 16, repeat: Infinity, ease: "easeInOut" }}
         >
           <AnimatePresence initial={false}>
             {wallpaper.type === "video" ? (
@@ -67,7 +68,7 @@ export function BackgroundScene({ wallpaper, mouseX, mouseY, parallax }: Props) 
                 exit={{ opacity: 0, zIndex: 0 }}
                 transition={{ duration: reduced ? 0.01 : 0.9, ease: "easeInOut" }}
               >
-                {reduced ? (
+                {!motionEnabled || reduced ? (
                   <img
                     src={wallpaper.poster || wallpaper.desktop}
                     alt={wallpaper.alt}

@@ -1,24 +1,27 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { AlertCircle, ArrowUpRight, Check, Copy, Loader2, Send } from "lucide-react";
 import { EMAIL, SOCIALS } from "@/data/socials";
 import { PORTFOLIO_CONFIG } from "@/config/portfolio";
 import { SOCIAL_ICONS } from "../icons";
+import { copyText } from "@/utils/clipboard";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
 const inputCls =
-  "h-11 w-full rounded-[10px] border border-ink/12 bg-white px-3.5 text-[14px] text-ink placeholder:text-ink/30 outline-none transition-colors focus:border-ink/45";
+  "h-11 w-full rounded-[10px] border border-ink/12 bg-white px-3.5 text-[16px] sm:text-[14px] text-ink placeholder:text-ink/30 outline-none transition-colors focus:border-ink/45";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-export function ContactWindow() {
+export function ContactWindow({ scope }: { scope?: { text: string; id: number } }) {
+  const [message, setMessage] = useState(scope?.text ?? "");
+  useEffect(() => { if (scope) setMessage(scope.text); }, [scope]);
   const [status, setStatus] = useState<Status>("idle");
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const copyEmail = async () => {
     try {
-      await navigator.clipboard.writeText(EMAIL);
+      if (!await copyText(EMAIL)) throw new Error("Copy failed");
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -75,6 +78,7 @@ export function ContactWindow() {
       }
       setStatus("sent");
       form.reset();
+      setMessage("");
       setTimeout(() => setStatus("idle"), 4000);
     } catch {
       setStatus("error");
@@ -87,7 +91,7 @@ export function ContactWindow() {
       <div className="grid gap-10 px-5 pb-12 pt-6 md:grid-cols-[1fr_1.15fr] md:gap-12 md:px-9 md:pt-8">
         {/* ── left — the ask ── */}
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/40">Contact — Say hello</p>
+          <p className="text-[12px] font-medium text-ink/60">Contact — Say hello</p>
 
           <h2 className="mt-3 max-w-[18ch] text-[clamp(25px,3.4vw,34px)] font-medium leading-[1.08] tracking-[-0.025em] text-ink">
             Let's build something{" "}
@@ -95,16 +99,15 @@ export function ContactWindow() {
           </h2>
 
           <p className="mt-4 max-w-[46ch] text-[14px] leading-[1.75] text-ink/68">
-            Available for freelance, collaborations and a small number of selected projects each quarter.
-            Write a few lines — I reply personally, {PORTFOLIO_CONFIG.contact.replyTime}.
+            Available for freelance work and collaborations. {PORTFOLIO_CONFIG.contact.replyTime}
           </p>
 
-          <div className="mt-6 flex items-center gap-2.5">
+          <div className="mt-6 flex flex-wrap items-center gap-2.5">
             <a
               href={`mailto:${EMAIL}`}
-              className="group inline-flex items-baseline gap-2 text-[17px] font-medium tracking-[-0.01em] text-ink"
+              className="group inline-flex min-w-0 items-baseline gap-2 text-[clamp(14px,4vw,17px)] font-medium text-ink"
             >
-              <span className="underline decoration-ink/25 underline-offset-[6px] transition-colors group-hover:decoration-ink">
+              <span className="break-all underline decoration-ink/25 underline-offset-[6px] transition-colors group-hover:decoration-ink">
                 {EMAIL}
               </span>
               <Send size={13} className="translate-y-[1px] text-ink/50 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -124,12 +127,12 @@ export function ContactWindow() {
                 copied ? "opacity-100" : "opacity-0",
               ].join(" ")}
             >
-              Copied
+              {copied ? "Copied" : ""}
             </span>
           </div>
 
           <div className="mt-8">
-            <p className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-ink/40">Elsewhere</p>
+            <p className="text-[12px] font-medium text-ink/60">Elsewhere</p>
             <div className="mt-3">
               {SOCIALS.map((s) => {
                 const Icon = SOCIAL_ICONS[s.id];
@@ -175,13 +178,13 @@ export function ContactWindow() {
         <form onSubmit={onSubmit} className="flex flex-col gap-5 md:pt-1">
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block">
-              <span className="mb-2 block font-mono text-[9.5px] uppercase tracking-[0.2em] text-ink/45">
+              <span className="mb-2 block text-[12px] font-medium text-ink/65">
                 Name
               </span>
               <input required name="name" autoComplete="name" placeholder="Ada Lovelace" className={inputCls} />
             </label>
             <label className="block">
-              <span className="mb-2 block font-mono text-[9.5px] uppercase tracking-[0.2em] text-ink/45">
+              <span className="mb-2 block text-[12px] font-medium text-ink/65">
                 Email
               </span>
               <input
@@ -196,15 +199,17 @@ export function ContactWindow() {
           </div>
 
           <label className="block">
-            <span className="mb-2 block font-mono text-[9.5px] uppercase tracking-[0.2em] text-ink/45">
+            <span className="mb-2 block text-[12px] font-medium text-ink/65">
               Message
             </span>
             <textarea
               required
               name="message"
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
               rows={7}
               placeholder="What are we building? Timeline, budget range, references — anything helps."
-              className="w-full resize-none rounded-[10px] border border-ink/12 bg-white px-3.5 py-3 text-[14px] leading-[1.6] text-ink placeholder:text-ink/30 outline-none transition-colors focus:border-ink/45"
+              className="w-full resize-none rounded-[10px] border border-ink/12 bg-white px-3.5 py-3 text-[16px] sm:text-[14px] leading-[1.6] text-ink placeholder:text-ink/30 outline-none transition-colors focus:border-ink/45"
             />
           </label>
 
@@ -228,7 +233,7 @@ export function ContactWindow() {
           >
             {(status === "idle" || status === "error") && (
               <>
-                Send message
+                {PORTFOLIO_CONFIG.contact.formEndpoint ? "Send message" : "Continue in email"}
                 <Send size={13} />
               </>
             )}
@@ -246,8 +251,8 @@ export function ContactWindow() {
             )}
           </button>
 
-          <p className="text-center font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink/35">
-            No newsletters. No spam. Just a reply.
+          <p className="text-center text-[12px] leading-5 text-ink/60">
+            {PORTFOLIO_CONFIG.contact.formEndpoint ? "Your message will be sent securely." : "This opens your email app with the message ready to send."}
           </p>
         </form>
       </div>

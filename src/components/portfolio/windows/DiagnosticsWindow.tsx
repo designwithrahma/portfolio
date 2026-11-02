@@ -69,7 +69,7 @@ export function DiagnosticsWindow() {
 
         <div className="p-4 rounded-xl border border-white/10 bg-white/[0.02] space-y-1">
           <p className="text-[10px] text-white/40 uppercase">WebGL Acceleration</p>
-          <p className="text-2xl font-bold text-emerald-400">{isWebGL ? "ENABLED" : "N/A"}</p>
+          <p className="text-lg sm:text-2xl font-bold text-emerald-400">{isWebGL ? "ENABLED" : "N/A"}</p>
           <p className="text-[9px] text-white/30">GPU Pipeline</p>
         </div>
       </div>
@@ -102,7 +102,7 @@ export function DiagnosticsWindow() {
             <CheckCircle2 size={11} /> 100% Client-Side Evaluation
           </span>
           <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 flex items-center gap-1">
-            <CheckCircle2 size={11} /> A11y Tab-Trap &amp; Focus Enforced
+            <CheckCircle2 size={11} /> Keyboard navigation available
           </span>
           <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 flex items-center gap-1">
             <CheckCircle2 size={11} /> Zero Audio Autoplay Violations

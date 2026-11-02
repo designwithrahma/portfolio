@@ -1,6 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
 import { EMAIL, IDENTITY, SITE_LINKS } from "@/data/socials";
-import { MEDIA } from "@/data/media";
 import { PORTFOLIO_CONFIG } from "@/config/portfolio";
 
 interface Props {
@@ -28,7 +27,7 @@ const TOOLS = PORTFOLIO_CONFIG.resume.skills.tools;
 function Fact({ k, v }: { k: string; v: string }) {
   return (
     <div className="flex items-baseline justify-between gap-4 border-b border-ink/[0.08] pb-2">
-      <span className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-ink/40">{k}</span>
+      <span className="font-mono text-[12px] text-ink/60">{k}</span>
       <span className="text-right text-[12px] font-medium text-ink/75">{v}</span>
     </div>
   );
@@ -41,16 +40,15 @@ export function AboutWindow({ onOpenContact }: Props) {
         {/* ── portrait column ── */}
         <div>
           <figure>
-            <div className="overflow-hidden rounded-[14px] ring-1 ring-black/10">
+            <div className="overflow-hidden rounded-[12px] bg-[#d9d9d4] ring-1 ring-black/10">
               <img
-                src={MEDIA.portrait.src}
-                alt={MEDIA.portrait.alt}
-                className="aspect-[3/4] w-full object-cover grayscale"
+                src="/assets/portfolio-bg-poster.webp"
+                alt="Illustrated Designwithrahma desktop artwork"
+                className="aspect-[4/3] w-full object-cover object-center"
               />
             </div>
-            <figcaption className="mt-2 flex items-center justify-between font-mono text-[9.5px] uppercase tracking-[0.18em] text-ink/35">
-              <span>{IDENTITY.name} — studio of one</span>
-              <span>Est. {IDENTITY.established}</span>
+            <figcaption className="mt-3 text-[12px] text-ink/60">
+              Mohammed Rahmathullah · Designwithrahma
             </figcaption>
           </figure>
 
@@ -64,12 +62,10 @@ export function AboutWindow({ onOpenContact }: Props) {
 
         {/* ── content column ── */}
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/40">About — Hello</p>
+          <p className="text-[12px] font-medium text-ink/60">About</p>
 
           <h2 className="mt-3 max-w-[24ch] text-[clamp(25px,3.4vw,34px)] font-medium leading-[1.08] tracking-[-0.025em] text-ink">
-            I design &amp; build digital products with an{" "}
-            <em className="font-editorial font-normal italic">editorial eye</em> and an{" "}
-            <em className="font-editorial font-normal italic">engineer's patience</em>.
+            Design and development, from first idea to finished work.
           </h2>
 
           <p className="mt-5 max-w-[60ch] text-[14.5px] leading-[1.78] text-ink/72">
@@ -80,7 +76,7 @@ export function AboutWindow({ onOpenContact }: Props) {
           <div className="mt-9 grid gap-7 sm:grid-cols-2">
             {CAPABILITIES.map((cap) => (
               <div key={cap.label}>
-                <p className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-ink/40">{cap.label}</p>
+                <p className="font-mono text-[12px] text-ink/60">{cap.label}</p>
                 <ul className="mt-3 space-y-2">
                   {cap.items.slice(0, 6).map((item, i) => (
                     <li key={item} className="flex items-baseline gap-2 text-[13px] leading-snug text-ink/75">
@@ -95,7 +91,7 @@ export function AboutWindow({ onOpenContact }: Props) {
 
           {/* experience */}
           <div className="mt-9">
-            <p className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-ink/40">Experience</p>
+            <p className="font-mono text-[12px] text-ink/60">Experience</p>
             <div className="mt-3">
               {EXPERIENCE.map((e) => (
                 <div
@@ -111,7 +107,7 @@ export function AboutWindow({ onOpenContact }: Props) {
 
           {/* tools */}
           <div className="mt-9">
-            <p className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-ink/40">Daily tools</p>
+            <p className="font-mono text-[12px] text-ink/60">Daily tools</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {TOOLS.map((t) => (
                 <span
@@ -129,7 +125,7 @@ export function AboutWindow({ onOpenContact }: Props) {
             <button
               type="button"
               onClick={onOpenContact}
-              className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-[10px] bg-ink px-4 text-[13px] font-medium text-paper transition-all hover:bg-black active:translate-y-px"
+              className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-[10px] bg-ink px-4 text-[13px] font-medium text-paper transition-colors hover:bg-black active:translate-y-px"
             >
               Start a project
               <ArrowUpRight size={14} />

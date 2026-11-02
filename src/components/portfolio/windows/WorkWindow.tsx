@@ -32,19 +32,19 @@ export function WorkWindow({ onOpenProject }: Props) {
       <div className="relative px-5 pb-12 pt-6 md:px-9 md:pt-8">
         <div className="flex flex-col justify-between gap-4 border-b border-ink/10 pb-5 md:flex-row md:items-end">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/40">Directory · {projects.length} of {PROJECTS.length} cases</p>
-            <h2 className="mt-1.5 text-[clamp(26px,3.4vw,34px)] font-medium leading-none tracking-[-0.025em]">Selected Work & Archives</h2>
-            <p className="font-editorial mt-2 text-[17px] italic text-ink/55">Production products, design systems & creative technology</p>
+            <p className="text-[12px] text-ink/60">Directory · {projects.length} of {PROJECTS.length} cases</p>
+            <h2 className="mt-1.5 text-[clamp(26px,3.4vw,34px)] font-medium leading-none tracking-[-0.025em]">Selected work</h2>
+            <p className="mt-2 text-[13px] text-ink/60">Projects in design, development and creative technology</p>
           </div>
           <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
             <label className="relative">
               <span className="sr-only">Filter projects</span>
               <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink/40" />
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter projects..." className="h-8 w-full rounded-[8px] border border-ink/15 bg-white pl-8 pr-3 text-xs outline-none focus:border-ink/40 sm:w-44" />
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects" className="h-10 sm:h-8 w-full rounded-[8px] border border-ink/15 bg-white pl-8 pr-3 text-[16px] sm:text-xs outline-none focus:border-ink/40 sm:w-44" />
             </label>
-            <div className="flex gap-1 rounded-[8px] border border-ink/10 bg-white p-0.5" role="tablist">
+            <div className="flex gap-1 rounded-[8px] border border-ink/10 bg-white p-0.5" role="group" aria-label="Filter by project type">
               {FILTERS.map((item) => (
-                <button key={item.id} type="button" role="tab" aria-selected={filter === item.id} onClick={() => setFilter(item.id)} className={`h-7 cursor-pointer rounded-[6px] px-2.5 font-mono text-[9.5px] uppercase tracking-[0.14em] ${filter === item.id ? "bg-ink text-white" : "text-ink/55 hover:text-ink"}`}>{item.label}</button>
+                <button key={item.id} type="button" aria-pressed={filter === item.id} onClick={() => setFilter(item.id)} className={`min-h-10 sm:min-h-8 cursor-pointer rounded-[6px] px-2.5 text-[12px] font-medium ${filter === item.id ? "bg-ink text-white" : "text-ink/55 hover:text-ink"}`}>{item.label}</button>
               ))}
             </div>
           </div>
@@ -53,17 +53,17 @@ export function WorkWindow({ onOpenProject }: Props) {
         <div className="os-scroll flex items-center gap-1.5 overflow-x-auto py-3">
           <span className="mr-1 flex items-center gap-1 whitespace-nowrap font-mono text-[10px] uppercase tracking-wider text-ink/40"><FilterIcon size={10} /> Tech:</span>
           {STACKS.map((stack) => (
-            <button key={stack} type="button" onClick={() => setSelectedTech(stack)} className={`cursor-pointer whitespace-nowrap rounded-md px-2.5 py-1 font-mono text-[10.5px] ${selectedTech === stack ? "bg-emerald-600 text-white" : "bg-ink/5 text-ink/65 hover:bg-ink/10"}`}>{stack}</button>
+            <button key={stack} type="button" onClick={() => setSelectedTech(stack)} aria-pressed={selectedTech === stack} className={`min-h-10 sm:min-h-8 cursor-pointer whitespace-nowrap rounded-md px-2.5 py-1 text-[12px] ${selectedTech === stack ? "bg-ink text-white" : "bg-ink/5 text-ink/65 hover:bg-ink/10"}`}>{stack}</button>
           ))}
         </div>
 
         {hovered && (
-          <div className="pointer-events-none fixed right-16 top-1/2 z-30 hidden w-64 -translate-y-1/2 overflow-hidden rounded-xl border border-ink/15 bg-white shadow-2xl lg:block">
+          <div className="pointer-events-none fixed right-16 top-1/2 z-30 hidden w-64 -translate-y-1/2 overflow-hidden rounded-xl border border-ink/10 bg-white shadow-xl lg:block">
             <img src={hovered.cover} alt="" className="aspect-[16/10] w-full object-cover" />
             <div className="space-y-1 p-3">
-              <span className="font-mono text-[9px] font-semibold uppercase tracking-wider text-emerald-700">{hovered.category} · {hovered.year}</span>
-              <p className="text-xs font-semibold">{hovered.title}</p>
-              <p className="line-clamp-2 text-[11px] leading-tight text-ink/60">{hovered.summary}</p>
+              <p className="text-[12px] text-ink/60">{hovered.category} · {hovered.year}</p>
+              <p className="text-sm font-medium">{hovered.title}</p>
+              <p className="line-clamp-2 text-xs leading-relaxed text-ink/60">{hovered.summary}</p>
             </div>
           </div>
         )}
@@ -77,17 +77,17 @@ export function WorkWindow({ onOpenProject }: Props) {
               onClick={() => onOpenProject(project.id)}
               onMouseEnter={() => setHovered(project)}
               onMouseLeave={() => setHovered(null)}
-              className="group grid w-full cursor-pointer grid-cols-[2.2rem_1fr_auto] items-center gap-3 border-b border-ink/10 py-3.5 text-left hover:bg-ink/[0.03] md:grid-cols-[2.6rem_1.2fr_1fr_8rem_4rem_1.5rem]"
+              className="group grid w-full cursor-pointer grid-cols-[56px_minmax(0,1fr)_auto] items-center gap-3 border-b border-ink/10 py-3 text-left transition-colors hover:bg-ink/[0.03] md:grid-cols-[72px_minmax(0,1.2fr)_minmax(0,1fr)_6rem_4rem_1.5rem]"
             >
-              <span className="font-mono text-[10.5px] text-ink/35">{project.index}</span>
+              <img src={project.cover} alt="" loading="lazy" className="aspect-[4/3] w-full rounded-md bg-ink/5 object-cover" />
               <span><span className="block text-[15px] font-medium">{project.title}</span><span className="mt-0.5 block text-[11px] text-ink/50 md:hidden">{project.category}</span></span>
               <span className="hidden text-[12.5px] text-ink/50 md:block">{project.category}</span>
               <span className="hidden gap-1 md:flex">{project.stack.slice(0, 2).map((item) => <span key={item} className="rounded bg-ink/5 px-1.5 py-0.5 font-mono text-[9.5px] text-ink/60">{item}</span>)}</span>
               <span className="text-right font-mono text-[11px] text-ink/40">{project.year}</span>
-              <ArrowUpRight size={14} className="hidden text-ink/40 opacity-0 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100 md:block" />
+              <ArrowUpRight size={14} className="hidden text-ink/40 opacity-0 transition-[transform,opacity] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100 md:block" />
             </button>
           ))}
-          {!projects.length && <p className="py-12 text-center font-mono text-[10px] uppercase tracking-wider text-ink/40">No matching projects</p>}
+          {!projects.length && <p className="py-12 text-center text-[13px] text-ink/60">No projects match these filters. Try another search or category.</p>}
         </div>
       </div>
     </div>

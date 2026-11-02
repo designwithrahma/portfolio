@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import { PLATFORM_LABEL, type ReelItem } from "@/config/reels";
@@ -26,10 +27,29 @@ const isValidEmbedUrl = (value: string): boolean => {
  */
 export function ReelPlayerModal({ reel, onClose, onPrev, onNext }: Props) {
   const reduced = useReducedMotion();
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const isOpen = Boolean(reel);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    dialogRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+    return () => previousFocus?.focus({ preventScroll: true });
+  }, [isOpen]);
 
   useEffect(() => {
     if (!reel) return;
     const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Tab") {
+        const controls = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>("button:not([disabled]), iframe, a[href]") ?? []);
+        if (!controls.length) return;
+        const index = controls.indexOf(document.activeElement as HTMLElement);
+        const next = event.shiftKey ? (index <= 0 ? controls.length - 1 : index - 1) : (index + 1) % controls.length;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        controls[next].focus();
+        return;
+      }
       /* Never hijack typing in a field behind the player. */
       const target = event.target as HTMLElement | null;
       const editing =
@@ -61,10 +81,10 @@ export function ReelPlayerModal({ reel, onClose, onPrev, onNext }: Props) {
   const isVertical = reel?.aspect === "9:16";
   const validEmbed = reel ? isValidEmbedUrl(reel.embedUrl) : false;
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {reel && (
-        <div className="fixed inset-0 z-[97] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
           <motion.button
             type="button"
             aria-label="Close video"
@@ -77,6 +97,7 @@ export function ReelPlayerModal({ reel, onClose, onPrev, onNext }: Props) {
           />
 
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={`${reel.title} player`}
@@ -167,6 +188,7 @@ export function ReelPlayerModal({ reel, onClose, onPrev, onNext }: Props) {
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }

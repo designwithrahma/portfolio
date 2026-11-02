@@ -51,7 +51,7 @@ export function AppsLauncher({ isOpen, onClose, onOpenWindow, onOpenFolder }: Ap
     const onPointer = (event: PointerEvent) => {
       const target = event.target as HTMLElement;
       // Prevent closing if interacting with scrollbar or internal elements
-      if (!ref.current?.contains(target) && !target.closest('.group')) {
+      if (!ref.current?.contains(target) && !target.closest('[data-dock-apps]')) {
         onClose();
       }
     };
@@ -142,7 +142,7 @@ export function AppsLauncher({ isOpen, onClose, onOpenWindow, onOpenFolder }: Ap
           animate={{ opacity: 1, scale: 1, y: 0, x: "-50%" }}
           exit={{ opacity: 0, scale: 0.95, y: 10, x: "-50%" }}
           transition={{ type: "spring", stiffness: 500, damping: 32 }}
-          className="fixed bottom-[90px] left-1/2 z-[85] flex max-h-[calc(100dvh-120px)] w-[340px] flex-col overflow-hidden rounded-[16px] border border-white/15 bg-[#101013]/95 shadow-2xl backdrop-blur-2xl"
+          className="fixed bottom-[90px] left-1/2 z-[96] flex max-h-[calc(100dvh-120px)] w-[340px] flex-col overflow-hidden rounded-[16px] border border-white/15 bg-[#101013]/95 shadow-2xl backdrop-blur-2xl"
         >
           {/* Header & Search */}
           <div className="shrink-0 border-b border-white/10 p-3 pb-2 pt-3">

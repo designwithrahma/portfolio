@@ -55,7 +55,7 @@ export const PORTFOLIO_CONFIG = {
     established: "2021",
     availability: "Available for Projects",
     bookingLabel: "Currently booking",
-    bio: "I'm Designwithrahma, a creative developer and designer based in Kattankudy, Batticaloa. I work across visual design, web development and digital content, turning ideas into clear, engaging experiences. From posters and brand creatives to websites, interfaces and video content, I enjoy combining design and technology to create work that looks good, works well and has a purpose.",
+    bio: "I'm Mohammed Rahmathullah, the creative developer and designer behind Designwithrahma, based in Kattankudy, Batticaloa. I work across visual design, web development and digital content, turning ideas into clear, engaging experiences. From posters and brand creatives to websites, interfaces and video content, I enjoy combining design and technology to create work that looks good, works well and has a purpose.",
   },
 
   contact: {

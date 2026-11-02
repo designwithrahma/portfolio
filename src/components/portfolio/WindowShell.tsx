@@ -58,6 +58,8 @@ interface WindowShellProps {
   windowIndex?: number;
   /** Hidden windows remain mounted so app-local state survives minimize. */
   minimized?: boolean;
+  isActive?: boolean;
+  reduceMotion?: boolean;
   onClose: () => void;
   onMinimize?: () => void;
   onBack?: () => void;
@@ -76,6 +78,8 @@ export function WindowShell({
   windowId,
   windowIndex = 0,
   minimized = false,
+  isActive = true,
+  reduceMotion = false,
   onClose,
   onMinimize,
   onBack,
@@ -84,7 +88,8 @@ export function WindowShell({
   origin,
   children,
 }: WindowShellProps) {
-  const reduced = useReducedMotion();
+  const systemReduced = useReducedMotion();
+  const reduced = systemReduced || reduceMotion;
   const controls = useDragControls();
   const rootRef = useRef<HTMLElement>(null);
   const workArea = useWorkArea();
@@ -145,6 +150,14 @@ export function WindowShell({
   useEffect(() => {
     rootRef.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus({ preventScroll: true });
   }, []);
+
+  // A mobile sheet underneath another one becomes interactive again on close.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (isMobile && isActive && !minimized && root && !root.contains(document.activeElement)) {
+      root.querySelector<HTMLElement>(FOCUSABLE)?.focus({ preventScroll: true });
+    }
+  }, [isMobile, isActive, minimized]);
 
   const trapTab = (event: ReactKeyboardEvent) => {
     if (event.key !== "Tab") return;
@@ -350,10 +363,10 @@ export function WindowShell({
         initial={{ y: reduced ? 0 : "100%", opacity: reduced ? 0 : 1 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: reduced ? 0 : "100%", opacity: reduced ? 0 : 1 }}
-        transition={{ type: "spring", stiffness: 320, damping: 36 }}
+        transition={reduced ? { duration: 0.01 } : { type: "spring", stiffness: 320, damping: 36 }}
         style={{ zIndex }}
-        aria-hidden={minimized}
-        inert={minimized ? true : undefined}
+        aria-hidden={minimized || !isActive}
+        inert={minimized || !isActive ? true : undefined}
         className={`fixed inset-0 flex flex-col bg-paper text-ink ${minimized ? "hidden" : ""}`}
       >
         {header}
@@ -371,10 +384,9 @@ export function WindowShell({
       <SnapPreview zone={snapPreview} />
       <motion.section
         ref={rootRef as never}
-        onKeyDown={trapTab}
         onPointerDown={onFocus}
+        onFocusCapture={onFocus}
         role="dialog"
-        aria-modal="true"
         aria-label={title}
         data-window
         drag
@@ -406,7 +418,7 @@ export function WindowShell({
             : { opacity: 0, scale: reduced ? 1 : 0.95, translateY: reduced ? 0 : 14 }
         }
         transition={
-          interacting
+          interacting || reduced
             ? { duration: 0 }
             : { type: "spring", stiffness: 320, damping: 32 }
         }

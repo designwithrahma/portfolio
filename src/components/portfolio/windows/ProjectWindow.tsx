@@ -49,7 +49,7 @@ export function ProjectWindow({ id, onOpenProject, isActive = true }: Props) {
 
   /* Arrow keys move between case studies, but never while typing. */
   useEffect(() => {
-    if (!isActive) return;
+    if (!isActive || lightboxOpen) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
       if (event.metaKey || event.ctrlKey || event.altKey) return;
@@ -67,7 +67,7 @@ export function ProjectWindow({ id, onOpenProject, isActive = true }: Props) {
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [id, isActive, onOpenProject]);
+  }, [id, isActive, lightboxOpen, onOpenProject]);
 
   if (!project) {
     return (
@@ -179,19 +179,21 @@ export function ProjectWindow({ id, onOpenProject, isActive = true }: Props) {
           )}
 
           {/* ── cover (clickable for Lightbox) ── */}
-          <figure
+          <button
+            type="button"
             onClick={() => openLightboxAt(0)}
-            className="group relative mt-8 overflow-hidden rounded-[14px] ring-1 ring-black/10 cursor-pointer"
+            aria-label={`Expand ${project.title} image`}
+            className="group relative mt-8 block w-full overflow-hidden rounded-[14px] ring-1 ring-black/10 cursor-pointer"
           >
             <img
               src={project.cover}
               alt={`${project.title} — hero visual`}
-              className="aspect-[16/9] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+              className="aspect-[16/9] w-full object-cover"
             />
             <div className="absolute top-3 right-3 p-2 rounded-lg bg-black/60 text-white/80 opacity-0 group-hover:opacity-100 transition-opacity">
               <Maximize2 size={14} />
             </div>
-          </figure>
+          </button>
 
           {/* ── narrative — each section appears only when written ── */}
           {project.overview && (
@@ -209,6 +211,10 @@ export function ProjectWindow({ id, onOpenProject, isActive = true }: Props) {
           {g0 && (
             <figure
               onClick={() => openLightboxAt(1)}
+              onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openLightboxAt(1); } }}
+              role="button"
+              tabIndex={0}
+              aria-label={`Expand ${g0.caption || "gallery image"}`}
               className="group relative mt-10 cursor-pointer"
             >
               <div className="overflow-hidden rounded-[14px] ring-1 ring-black/10">
@@ -239,6 +245,10 @@ export function ProjectWindow({ id, onOpenProject, isActive = true }: Props) {
                   <figure
                     key={i}
                     onClick={() => openLightboxAt(i + 2)}
+                    onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openLightboxAt(i + 2); } }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Expand ${g.caption || "gallery image"}`}
                     className="group relative cursor-pointer"
                   >
                     <div className="overflow-hidden rounded-[12px] ring-1 ring-black/10">

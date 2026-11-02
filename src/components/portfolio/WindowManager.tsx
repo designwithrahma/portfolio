@@ -37,6 +37,7 @@ interface WindowManagerProps {
   onOpenProject: (id: string, opts?: { from?: "work" }) => void;
   onOpenWindow: (type: WindowType) => void;
   onOpenContactWithScope?: (msg: string) => void;
+  contactScope?: { text: string; id: number };
   onToggleSounds: () => void;
   onResetLayout: () => void;
   /** Appearance + motion preferences forwarded to the Settings app. */
@@ -78,6 +79,7 @@ export function WindowManager({
   onOpenProject,
   onOpenWindow,
   onOpenContactWithScope,
+  contactScope,
   onToggleSounds,
   onResetLayout,
   appearance,
@@ -128,7 +130,7 @@ export function WindowManager({
           body: <WorkWindow onOpenProject={(id) => onOpenProject(id, { from: "work" })} />,
         };
       case "contact":
-        return { ...METAS.contact, body: <ContactWindow /> };
+        return { ...METAS.contact, body: <ContactWindow scope={contactScope} /> };
       case "terminal":
         return {
           ...METAS.terminal,
@@ -240,6 +242,8 @@ export function WindowManager({
               windowId={win.id}
               windowIndex={idx}
               minimized={minimizedIds.has(win.id)}
+              isActive={isActive}
+              reduceMotion={appearance?.motionMode === "reduced"}
               isMobile={isMobile}
               title={resolved.title}
               kicker={resolved.kicker}
