@@ -231,14 +231,15 @@ export function TerminalWindow({ onOpenProject, onOpenWindow, onToggleSounds }: 
           }}
           className="flex items-center gap-2 pt-2"
         >
-          <span className="text-emerald-500 font-bold shrink-0">visitor@designwithrahma:~$</span>
+          <span className="text-emerald-500 font-bold shrink-0 max-[400px]:text-[10px]">visitor@designwithrahma:~$</span>
           <input
             ref={inputRef}
             type="text"
+            aria-label="Terminal command"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             autoFocus
-            className="flex-1 bg-transparent text-white outline-none border-none font-mono text-[13px] caret-emerald-400"
+            className="min-w-0 flex-1 bg-transparent text-white outline-none border-none font-mono text-[13px] caret-emerald-400"
             placeholder="Type 'help'..."
           />
           <button type="submit" aria-label="Send command" className="text-white/30 hover:text-emerald-400">

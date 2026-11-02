@@ -17,6 +17,7 @@ export default defineConfig({
     },
   },
   server: {
+    allowedHosts: [".e2b.app"],
     watch: {
       ignored: ['**/*.zip'],
     },

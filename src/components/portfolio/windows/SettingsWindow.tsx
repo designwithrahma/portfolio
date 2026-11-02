@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Image, Volume2, VolumeX, RotateCcw, Monitor, SlidersHorizontal, Waves } from "lucide-react";
+import { Volume2, VolumeX, RotateCcw, Monitor, SlidersHorizontal, Waves } from "lucide-react";
 
 import type { DockMagnification, IconSize, MotionMode } from "@/utils/storage";
 
@@ -28,7 +28,7 @@ interface Props {
 
 const TAB_CLASS = (active: boolean) =>
   [
-    "w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer",
+    "shrink-0 whitespace-nowrap md:w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer",
     active ? "bg-ink text-white" : "hover:bg-ink/5 text-ink/70",
   ].join(" ");
 
@@ -136,17 +136,17 @@ export function SettingsWindow({
   return (
     <div className="h-full flex flex-col md:flex-row bg-[#f8f7f4] text-ink overflow-hidden">
       {/* Sidebar Tabs */}
-      <div className="w-full md:w-[200px] shrink-0 border-b md:border-b-0 md:border-r border-ink/10 p-3 bg-white space-y-1">
+      <div className="w-full md:w-[200px] shrink-0 border-b md:border-b-0 md:border-r border-ink/10 p-3 bg-white flex gap-1 overflow-x-auto md:block md:space-y-1">
 
-        <button onClick={() => setActiveTab("appearance")} className={TAB_CLASS(activeTab === "appearance")}>
+        <button aria-pressed={activeTab === "appearance"} onClick={() => setActiveTab("appearance")} className={TAB_CLASS(activeTab === "appearance")}>
           <SlidersHorizontal size={14} />
           <span>Appearance</span>
         </button>
-        <button onClick={() => setActiveTab("audio")} className={TAB_CLASS(activeTab === "audio")}>
+        <button aria-pressed={activeTab === "audio"} onClick={() => setActiveTab("audio")} className={TAB_CLASS(activeTab === "audio")}>
           <Volume2 size={14} />
           <span>Sound &amp; Audio</span>
         </button>
-        <button onClick={() => setActiveTab("system")} className={TAB_CLASS(activeTab === "system")}>
+        <button aria-pressed={activeTab === "system"} onClick={() => setActiveTab("system")} className={TAB_CLASS(activeTab === "system")}>
           <Monitor size={14} />
           <span>Desktop Controls</span>
         </button>

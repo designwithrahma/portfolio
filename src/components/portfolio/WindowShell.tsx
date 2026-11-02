@@ -371,10 +371,8 @@ export function WindowShell({
       <SnapPreview zone={snapPreview} />
       <motion.section
         ref={rootRef as never}
-        onKeyDown={trapTab}
         onPointerDown={onFocus}
         role="dialog"
-        aria-modal="true"
         aria-label={title}
         data-window
         drag

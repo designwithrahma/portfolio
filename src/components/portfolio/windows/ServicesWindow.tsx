@@ -101,7 +101,7 @@ function ReelShowcase({ onPlay }: { onPlay: (reel: ReelItem) => void }) {
             Selected edits
           </h2>
           <p className="mt-1 text-[12px] text-ink/55">
-            Vertical reels, shorts and campaign films. Click any tile to play it inline.
+            Vertical reels, shorts and campaign films.
           </p>
         </div>
 
@@ -125,7 +125,7 @@ function ReelShowcase({ onPlay }: { onPlay: (reel: ReelItem) => void }) {
 
       {hasPlaceholders && (
         <p className="mt-3 border-l border-amber-600/35 pl-3 font-mono text-[9px] uppercase tracking-[0.14em] text-amber-800/70">
-          Sample media. Replace thumbnails and embed URLs in src/config/reels.ts.
+          More video work will be added here.
         </p>
       )}
 
@@ -134,9 +134,10 @@ function ReelShowcase({ onPlay }: { onPlay: (reel: ReelItem) => void }) {
           <button
             key={reel.id}
             type="button"
-            onClick={() => onPlay(reel)}
-            data-cursor="PLAY"
-            aria-label={`Play ${reel.title}`}
+            onClick={() => { if (reel.embedUrl) onPlay(reel); }}
+            disabled={!reel.embedUrl}
+            data-cursor={reel.embedUrl ? "PLAY" : undefined}
+            aria-label={reel.embedUrl ? `Play ${reel.title}` : `${reel.title} — coming soon`}
             className="group flex cursor-pointer flex-col overflow-hidden rounded-[12px] border border-ink/10 bg-white/70 text-left transition-colors hover:border-ink/25 hover:bg-white"
           >
             <div
@@ -144,12 +145,12 @@ function ReelShowcase({ onPlay }: { onPlay: (reel: ReelItem) => void }) {
                 reel.aspect === "9:16" ? "aspect-[9/16]" : "aspect-video"
               }`}
             >
-              <img
+              {reel.thumbnail ? <img
                 src={reel.thumbnail}
                 alt=""
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-              />
+                className="h-full w-full object-cover"
+              /> : <span className="grid h-full place-items-center text-sm text-white/75">Work coming soon</span>}
               <span className="absolute left-2 top-2 rounded-[5px] border border-white/20 bg-black/55 px-1.5 py-0.5 font-mono text-[8.5px] uppercase tracking-[0.14em] text-white/85 backdrop-blur-sm">
                 {PLATFORM_LABEL[reel.platform]}
               </span>

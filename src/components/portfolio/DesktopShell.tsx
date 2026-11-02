@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion } from "framer-motion";
-import { Images } from "lucide-react";
 import { PROJECTS, getProject, type Breakpoint, type Project } from "@/data/projects";
 import { getFolder } from "@/config/folders";
 import { WALLPAPERS } from "@/data/media";
@@ -94,6 +93,7 @@ const safeHashToWindow = (hash: string): ManagedWindow | null => {
 
 export function DesktopShell() {
   const initialWindow = safeHashToWindow(window.location.hash);
+  const [contactScope, setContactScope] = useState<{ text: string; id: number } | undefined>();
   const [windows, setWindows] = useState<ManagedWindow[]>(initialWindow ? [initialWindow] : []);
   const [activeWindowId, setActiveWindowId] = useState<string | null>(initialWindow?.id ?? null);
   const [minimizedIds, setMinimizedIds] = useState<Set<string>>(new Set());
@@ -353,6 +353,7 @@ export function DesktopShell() {
   }, []);
 
   const closeWindow = useCallback((id: string) => {
+    if (id === "win-contact") setContactScope(undefined);
     uiSound.play("close");
     setWindows((current) => {
       const remaining = current.filter((item) => item.id !== id);
@@ -707,7 +708,8 @@ export function DesktopShell() {
         onFocus={focusWindow}
         onOpenProject={openProject}
         onOpenWindow={openWindow}
-        onOpenContactWithScope={() => openWindow("contact")}
+        contactScope={contactScope}
+        onOpenContactWithScope={(text) => { setContactScope({ text, id: Date.now() }); openWindow("contact"); }}
         onToggleSounds={toggleSounds}
         onResetLayout={resetIcons}
         appearance={{

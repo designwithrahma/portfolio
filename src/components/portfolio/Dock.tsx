@@ -42,9 +42,10 @@ function DockItem({
   tooltipAlign: "left" | "center" | "right";
   isMobile?: boolean;
 }) {
+  const reduced = useReducedMotion();
   const classes = [
     "relative flex flex-col items-center justify-center cursor-pointer rounded-[12px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50",
-    isMobile ? "h-[54px] w-[56px] gap-1" : "h-11 w-11",
+    isMobile ? "h-[54px] w-[56px] max-[349px]:w-[52px] gap-1" : "h-11 w-11",
     entry.active ? "bg-white/15 text-white" : "text-white/72 hover:bg-white/10 hover:text-white",
   ].join(" ");
   
@@ -71,8 +72,8 @@ function DockItem({
         style={{ transformOrigin: "50% 100%" }}
         animate={{ scale, y: -(scale - 1) * 34 }}
         transition={{ type: "spring", stiffness: 480, damping: 26, mass: 0.6 }}
-        whileHover={magnification ? undefined : { y: -6, scale: 1.12 }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={magnification || isMobile || reduced ? undefined : { y: -3 }}
+        whileTap={reduced ? undefined : { scale: 0.97 }}
       >
         {content}
       </motion.div>
@@ -112,14 +113,13 @@ export function Dock({
   const pointerXRef = useRef(0);
 
   /*
-    The full mobile set (7 items ≈ 344px) only fits once the viewport gives it
-    room. Below this width the dock keeps the four primary destinations so it
-    never clips or overflows; every other app stays reachable through the
-    system menu, command palette and desktop icons.
+    Seven labeled items need more than 428px including padding and gaps.
+    Below that, keep the five primary destinations visible; the launcher
+    still provides access to the remaining apps.
   */
-  const [veryNarrow, setVeryNarrow] = useState(() => window.innerWidth < 350);
+  const [veryNarrow, setVeryNarrow] = useState(() => window.innerWidth < 460);
   useEffect(() => {
-    const onResize = () => setVeryNarrow(window.innerWidth < 350);
+    const onResize = () => setVeryNarrow(window.innerWidth < 460);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
@@ -169,7 +169,7 @@ export function Dock({
     : isCompact
       ? [
           ...core,
-          ...desktopApps,
+          ...desktopApps.filter((entry) => entry.active),
           "separator",
           ...socialEntries,
           "separator",
@@ -178,7 +178,7 @@ export function Dock({
         ]
       : [
           ...core,
-          ...desktopApps,
+          ...desktopApps.filter((entry) => entry.active),
           "separator",
           ...socialEntries,
           "separator",
@@ -218,7 +218,7 @@ export function Dock({
   return (
     <motion.nav
       aria-label="Desktop dock"
-      className="fixed left-1/2 z-[55] -translate-x-1/2"
+      className={`fixed left-1/2 -translate-x-1/2 ${isMobile ? "z-[55]" : "z-[95]"}`}
       style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 18px)" }}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
