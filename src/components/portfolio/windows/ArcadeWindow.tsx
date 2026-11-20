@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { Play, RotateCcw, Trophy, Gamepad2 } from "lucide-react";
 import { uiSound } from "@/utils/sound";
 
-export function ArcadeWindow() {
+export function ArcadeWindow({ active }: { active: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState(0);
@@ -53,10 +53,11 @@ export function ArcadeWindow() {
     setScore(0);
     setGameOver(false);
     setIsPlaying(true);
+    canvasRef.current?.focus();
   };
 
   useEffect(() => {
-    if (!isPlaying) return;
+    if (!isPlaying || !active) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -75,7 +76,7 @@ export function ArcadeWindow() {
         shiftDimension();
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
+    canvas.addEventListener("keydown", handleKeyDown);
 
     const loop = () => {
       const s = gameStateRef.current;
@@ -174,9 +175,9 @@ export function ArcadeWindow() {
 
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener("keydown", handleKeyDown);
+      canvas.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isPlaying, highScore]);
+  }, [isPlaying, active, highScore]);
 
   return (
     <div className="h-full flex flex-col bg-[#0d0d10] text-white p-4 sm:p-6 overflow-hidden select-none">
@@ -202,6 +203,8 @@ export function ArcadeWindow() {
       <div className="flex-1 relative rounded-xl border border-white/15 overflow-hidden bg-black flex items-center justify-center">
         <canvas
           ref={canvasRef}
+          tabIndex={0}
+          aria-label="Arcade game: Space to jump, Shift to invert"
           width={600}
           height={320}
           onClick={isPlaying ? jump : undefined}

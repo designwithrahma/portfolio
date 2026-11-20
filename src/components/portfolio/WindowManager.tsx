@@ -36,7 +36,9 @@ interface WindowManagerProps {
   onFocus: (id: string) => void;
   onOpenProject: (id: string, opts?: { from?: "work" }) => void;
   onOpenWindow: (type: WindowType) => void;
-  onOpenContactWithScope?: (msg: string) => void;
+  contactMessage: string;
+  onChangeContactMessage: (message: string) => void;
+  onOpenContactWithScope: (msg: string) => void;
   onToggleSounds: () => void;
   onResetLayout: () => void;
   /** Appearance + motion preferences forwarded to the Settings app. */
@@ -77,6 +79,8 @@ export function WindowManager({
   onFocus,
   onOpenProject,
   onOpenWindow,
+  contactMessage,
+  onChangeContactMessage,
   onOpenContactWithScope,
   onToggleSounds,
   onResetLayout,
@@ -128,7 +132,7 @@ export function WindowManager({
           body: <WorkWindow onOpenProject={(id) => onOpenProject(id, { from: "work" })} />,
         };
       case "contact":
-        return { ...METAS.contact, body: <ContactWindow /> };
+        return { ...METAS.contact, body: <ContactWindow message={contactMessage} onMessageChange={onChangeContactMessage} /> };
       case "terminal":
         return {
           ...METAS.terminal,
@@ -162,16 +166,13 @@ export function WindowManager({
       case "paint":
         return { ...METAS.paint, body: <PaintWindow /> };
       case "arcade":
-        return { ...METAS.arcade, body: <ArcadeWindow /> };
+        return { ...METAS.arcade, body: <ArcadeWindow active={win.id === activeWindowId && !minimizedIds.has(win.id) && !suppressEscape} /> };
       case "estimator":
         return {
           ...METAS.estimator,
           body: (
             <EstimatorWindow
-              onOpenContactWithScope={(scopeMsg) => {
-                if (onOpenContactWithScope) onOpenContactWithScope(scopeMsg);
-                else onOpenWindow("contact");
-              }}
+              onOpenContactWithScope={onOpenContactWithScope}
             />
           ),
         };

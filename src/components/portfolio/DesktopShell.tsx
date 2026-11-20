@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion } from "framer-motion";
-import { Images } from "lucide-react";
+import { initialWindowState, windowReducer } from "./windowState";
 import { PROJECTS, getProject, type Breakpoint, type Project } from "@/data/projects";
 import { getFolder } from "@/config/folders";
 import { WALLPAPERS } from "@/data/media";
@@ -93,10 +93,10 @@ const safeHashToWindow = (hash: string): ManagedWindow | null => {
 };
 
 export function DesktopShell() {
-  const initialWindow = safeHashToWindow(window.location.hash);
-  const [windows, setWindows] = useState<ManagedWindow[]>(initialWindow ? [initialWindow] : []);
-  const [activeWindowId, setActiveWindowId] = useState<string | null>(initialWindow?.id ?? null);
-  const [minimizedIds, setMinimizedIds] = useState<Set<string>>(new Set());
+  const [{ windows, activeWindowId, minimizedIds }, dispatchWindow] = useReducer(
+    windowReducer, window.location.hash, (hash) => initialWindowState(safeHashToWindow(hash)),
+  );
+  const [contactMessage, setContactMessage] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null);
   const [quickLookId, setQuickLookId] = useState<string | null>(null);
@@ -106,7 +106,7 @@ export function DesktopShell() {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [musicPlayerOpen, setMusicPlayerOpen] = useState(false);
-  const storedPreferences = useRef<DesktopPreferences>(loadPreferences()).current;
+  const [storedPreferences] = useState<DesktopPreferences>(loadPreferences);
   const [weather, setWeather] = useState<WeatherMode>(storedPreferences.weather as WeatherMode);
   const [saver, setSaver] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
@@ -176,19 +176,7 @@ export function DesktopShell() {
     const applyRoute = () => {
       historyNavigationRef.current = true;
       const next = safeHashToWindow(window.location.hash);
-      if (!next) {
-        setWindows([]);
-        setActiveWindowId(null);
-        setMinimizedIds(new Set());
-        return;
-      }
-      setWindows((current) => current.some((item) => item.id === next.id) ? current : [...current, next]);
-      setActiveWindowId(next.id);
-      setMinimizedIds((current) => {
-        const updated = new Set(current);
-        updated.delete(next.id);
-        return updated;
-      });
+      dispatchWindow(next ? { type: "open", window: next } : { type: "reset" });
     };
     window.addEventListener("popstate", applyRoute);
     window.addEventListener("hashchange", applyRoute);
@@ -270,13 +258,7 @@ export function DesktopShell() {
     const id = `win-${type}`;
     uiSound.play("open");
     setOrigin(null);
-    setWindows((current) => current.some((item) => item.id === id) ? current : [...current, { id, type } as ManagedWindow]);
-    setActiveWindowId(id);
-    setMinimizedIds((current) => {
-      const updated = new Set(current);
-      updated.delete(id);
-      return updated;
-    });
+    dispatchWindow({ type: "open", window: { id, type } as ManagedWindow });
     /* Recent-items foundation for Part 2. */
     if (type !== "shortcuts") {
       setRecentItems(
@@ -292,13 +274,7 @@ export function DesktopShell() {
     }
     const id = `win-project-${projectId}`;
     uiSound.play("open");
-    setWindows((current) => [...current.filter((item) => item.id !== id), { id, type: "project", projectId, from: options?.from }]);
-    setActiveWindowId(id);
-    setMinimizedIds((current) => {
-      const updated = new Set(current);
-      updated.delete(id);
-      return updated;
-    });
+    dispatchWindow({ type: "open", window: { id, type: "project", projectId, from: options?.from } });
     setRecentItems(
       pushRecentItem({
         id: projectId,
@@ -321,8 +297,7 @@ export function DesktopShell() {
     const id = `win-folder-${folderId}`;
     uiSound.play("open");
     setOrigin(null);
-    setWindows((current) => current.some((item) => item.id === id) ? current : [...current, { id, type: "folder", folderId }]);
-    setActiveWindowId(id);
+    dispatchWindow({ type: "open", window: { id, type: "folder", folderId } });
   }, [notify]);
 
   /** Recent list is re-read after opens so the System Menu stays current. */
@@ -354,37 +329,15 @@ export function DesktopShell() {
 
   const closeWindow = useCallback((id: string) => {
     uiSound.play("close");
-    setWindows((current) => {
-      const remaining = current.filter((item) => item.id !== id);
-      setActiveWindowId((active) => active === id ? remaining[remaining.length - 1]?.id ?? null : active);
-      return remaining;
-    });
-    setMinimizedIds((current) => {
-      const updated = new Set(current);
-      updated.delete(id);
-      return updated;
-    });
+    dispatchWindow({ type: "close", id });
   }, []);
 
   const minimizeWindow = useCallback((id: string) => {
     uiSound.play("minimize");
-    setMinimizedIds((current) => new Set(current).add(id));
-    setActiveWindowId((active) => {
-      if (active !== id) return active;
-      const remaining = windows.filter((item) => item.id !== id && !minimizedIds.has(item.id));
-      return remaining[remaining.length - 1]?.id ?? null;
-    });
-  }, [minimizedIds, windows]);
-
-  const focusWindow = useCallback((id: string) => {
-    setActiveWindowId(id);
-    setMinimizedIds((current) => {
-      const updated = new Set(current);
-      updated.delete(id);
-      return updated;
-    });
+    dispatchWindow({ type: "minimize", id });
   }, []);
 
+  const focusWindow = useCallback((id: string) => dispatchWindow({ type: "focus", id }), []);
 
   const toggleSounds = useCallback(() => {
     setSoundsOn((current) => {
@@ -594,7 +547,7 @@ export function DesktopShell() {
       onPointerMove={onPointerMove}
       onContextMenu={onContextMenu}
     >
-      <BackgroundScene wallpaper={WALLPAPERS[0]} mouseX={mouseX} mouseY={mouseY} parallax={parallax} />
+      <BackgroundScene wallpaper={WALLPAPERS[0]} mouseX={mouseX} mouseY={mouseY} parallax={parallax} motionAllowed={motionAllowed} />
       <WeatherAtmosphere weather={weatherEffects && motionAllowed ? weather : "clear"} />
       <IdentityMark
         hasCustomLayout={Object.keys(offsets).length > 0}
@@ -707,7 +660,12 @@ export function DesktopShell() {
         onFocus={focusWindow}
         onOpenProject={openProject}
         onOpenWindow={openWindow}
-        onOpenContactWithScope={() => openWindow("contact")}
+        contactMessage={contactMessage}
+        onChangeContactMessage={setContactMessage}
+        onOpenContactWithScope={(summary) => {
+          setContactMessage((draft) => draft.includes(summary) ? draft : [draft, summary].filter(Boolean).join("\n\n"));
+          openWindow("contact");
+        }}
         onToggleSounds={toggleSounds}
         onResetLayout={resetIcons}
         appearance={{

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Image, Volume2, VolumeX, RotateCcw, Monitor, SlidersHorizontal, Waves } from "lucide-react";
+import { Volume2, VolumeX, RotateCcw, Monitor, SlidersHorizontal, Waves } from "lucide-react";
 
 import type { DockMagnification, IconSize, MotionMode } from "@/utils/storage";
 

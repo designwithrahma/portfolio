@@ -11,7 +11,7 @@ const inputCls =
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-export function ContactWindow() {
+export function ContactWindow({ message, onMessageChange }: { message: string; onMessageChange: (value: string) => void }) {
   const [status, setStatus] = useState<Status>("idle");
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,6 +75,7 @@ export function ContactWindow() {
       }
       setStatus("sent");
       form.reset();
+      onMessageChange("");
       setTimeout(() => setStatus("idle"), 4000);
     } catch {
       setStatus("error");
@@ -202,6 +203,8 @@ export function ContactWindow() {
             <textarea
               required
               name="message"
+              value={message}
+              onChange={(event) => onMessageChange(event.target.value)}
               rows={7}
               placeholder="What are we building? Timeline, budget range, references — anything helps."
               className="w-full resize-none rounded-[10px] border border-ink/12 bg-white px-3.5 py-3 text-[14px] leading-[1.6] text-ink placeholder:text-ink/30 outline-none transition-colors focus:border-ink/45"
