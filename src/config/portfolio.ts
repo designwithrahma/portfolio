@@ -2,7 +2,7 @@
  * PORTFOLIO CONTROL PANEL
  * -----------------------
  * Edit this file to update your personal details, project links,
- * feature flags, notes, testimonials, and system apps.
+ * notes, testimonials, and résumé.
  */
 
 export type SocialId = "instagram" | "x" | "behance" | "github" | "linkedin";
@@ -61,7 +61,7 @@ export const PORTFOLIO_CONFIG = {
   contact: {
     email: "rahmathullah5975@gmail.com",
     replyTime: "Usually replies within 48 hours.",
-    /** Formspree / Web3Forms / your API endpoint. Empty = local demo success. */
+    /** Optional FormData POST endpoint. Empty opens the visitor’s email client. */
     formEndpoint: "",
   },
 
@@ -73,20 +73,6 @@ export const PORTFOLIO_CONFIG = {
     resume: "",
     /** Example: Calendly / Cal.com. Hidden when empty. */
     booking: "",
-  },
-
-  features: {
-    enableTerminal: true,
-    enableNotes: true,
-    enableResume: true,
-    enableMailTestimonials: true,
-    enableSettings: true,
-    enableQuickLook: true,
-    enableMarqueeSelection: true,
-    enableDoubleTapToOpen: true,
-    enableMultiWindow: true,
-    enableSoundEffects: true,
-    enableScreensaver: true,
   },
 
   socials: [

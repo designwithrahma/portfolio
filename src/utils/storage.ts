@@ -19,10 +19,7 @@ interface Envelope<T> {
   data: T;
 }
 
-const isBrowser = () => typeof window !== "undefined" && typeof localStorage !== "undefined";
-
 export function readStore<T>(key: string, fallback: T, validate?: (value: unknown) => value is T): T {
-  if (!isBrowser()) return fallback;
   try {
     const raw = localStorage.getItem(key);
     if (!raw) return fallback;
@@ -43,7 +40,6 @@ export function readStore<T>(key: string, fallback: T, validate?: (value: unknow
 }
 
 export function writeStore<T>(key: string, data: T): void {
-  if (!isBrowser()) return;
   try {
     const envelope: Envelope<T> = { version: STORAGE_VERSION, data };
     localStorage.setItem(key, JSON.stringify(envelope));
@@ -53,7 +49,6 @@ export function writeStore<T>(key: string, data: T): void {
 }
 
 export function clearStore(key: string): void {
-  if (!isBrowser()) return;
   try {
     localStorage.removeItem(key);
   } catch {
